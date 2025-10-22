@@ -1,0 +1,11 @@
+{
+  "name": "speedy_lingo",
+  "version": "1.0.0",
+  "description": "This is a project for question answers",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Subham Samanta",
+  "license": "ISC"
+}
