@@ -1,6 +1,4 @@
 node_modules/
-db
-assets/videos/ESG_Risk_Viewer_Presentation_4K.mp4
 *.html
 *.config
 .env

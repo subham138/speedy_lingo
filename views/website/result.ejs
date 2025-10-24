@@ -1,0 +1,122 @@
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        overflow-x: hidden;
+        position: relative;
+    }
+</style>
+<!-- Particles Background -->
+<div id="particles"></div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Hero Header -->
+            <div class="hero-header" data-aos="fade-down">
+                <i class="bi bi-trophy-fill" style="font-size: 3rem; color: #FFD700; margin-bottom: 20px;"></i>
+                <h1 class="display-4 text-white mb-3">Your Test Results</h1>
+                <p class="lead text-white-50">Félicitations! Vous avez terminé le test.</p>
+            </div>
+
+            <!-- Main Results Card -->
+            <div class="main-card" data-aos="fade-up">
+                <!-- Score Display -->
+                <div class="text-center">
+                    <div id="scoreHero" class="score-hero">0 out of 10</div>
+                    <div id="percentageHero" class="percentage-hero">0%</div>
+                    
+                </div>
+
+                <!-- Level Section -->
+                <div class="text-center  mb-5" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="mb-3">Your Achievement Level</h2>
+                    <div id="levelBadge" class="level-badge level-beginner">Beginner (A1)</div>
+                </div>
+
+                <!-- Advice Accordion -->
+                <div class="advice-accordion" data-aos="fade-up" data-aos-delay="400">
+                    <div class="accordion" id="adviceAccordion">
+                        <div id="adviceItem" class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#adviceCollapse">
+                                    <i class="bi bi-lightbulb me-2"></i> Undestanding Your Score
+                                </button>
+                            </h2>
+                            <div id="adviceCollapse" class="accordion-collapse collapse show" data-bs-parent="#adviceAccordion">
+                                <div class="accordion-body" id="adviceBody">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6 text-center">
+                                            <p class="result-text">Votre Niveau est C1 !</p>
+                                            <img src="/images/fr_icon.png" alt="FR ISON">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <img src="/images/progress_level.png" alt="Progress Level">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-md-12">
+                                            <span class="suggestion-heading">The test <u>assessed</u> your <strong>“Understanding”</strong></span>
+                                        </div>
+                                        <div class="col-md-12 mt-2">
+                                            <span class="suggestion-sub-heading">Listening</span>
+                                            <p class="suggestion-info mt-2">
+                                                I can understand extended speech even when it is not clearly structured and when relationships are only implied and not signalled explicitly. I can understand television programmes and films without too much effort.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="suggestion-sub-heading">Reading</span>
+                                            <p class="suggestion-info mt-2">
+                                                I can understand long and complex factual and literary texts, appreciating distinctions of style. I can understand specialised articles and longer technical instructions, even when they do not relate to my field.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="suggestion-heading">The test <u>did not assess</u> your <strong>“Speaking”</strong>.</span>
+                                        </div>
+                                        <div class="col-md-12 mt-2">
+                                            <span class="suggestion-sub-heading">Spoken Interaction</span>
+                                            <p class="suggestion-info mt-2">
+                                                I can express myself fluently and spontaneously without much obvious searching for expressions. I can use language flexibly and effectively for social and professional purposes. I can formulate ideas and opinions with precision and relate my contribution skilfully to those of other speakers.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="suggestion-sub-heading">Spoken Production</span>
+                                            <p class="suggestion-info mt-2">
+                                                I can present clear, detailed descriptions of complex subjects integrating sub-themes, developing particular points and rounding off with an appropriate conclusion.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <span class="suggestion-heading">The test <u>did not assess</u> your <strong>“Writing”</strong>.</span>
+                                        </div>
+                                        <div class="col-md-12 mt-2">
+                                            <span class="suggestion-sub-heading">Writing</span>
+                                            <p class="suggestion-info mt-2">
+                                                I can express myself in clear, well-structured text, expressing points of view at some length. I can write about complex subjects in a letter, an essay or a report, underlining what I consider to be the salient issues. I can select style appropriate to the reader in mind.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="600">
+                    <a href="/" class="btn btn-custom me-3">
+                        <i class="bi bi-arrow-left me-2"></i> Retake the test
+                    </a>
+                    <a class="btn btn-custom" href="/signup">
+                        Register with us and start learning! <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confetti Canvas -->
+<canvas id="confettiCanvas" class="confetti-canvas"></canvas>

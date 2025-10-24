@@ -1,0 +1,397 @@
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        overflow-x: hidden;
+        position: relative;
+    }
+</style>
+<!-- Particles Background -->
+<div id="particles"></div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <form action="" method="get" class="signup-form">
+                <div class="main-card" data-aos="fade-up" style="margin-top: 80px;">
+                    <div class="text-center mb-4">
+                        <i class="icofont icofont-user-alt-7 signup-icon"></i>
+                        <h2 class="mt-2">Create an Account</h2>
+                    </div>
+                    <div class="form-group mt-4">
+                        <label class="form-label" for="name">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            placeholder="Enter your email">
+                    </div>
+                    <div class="form-group pass-container mt-3">
+                        <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
+                        <i class="icofont icofont-eye-blocked pass-icon"></i>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group pass-container mt-3">
+                        <label class="form-label" for="repass">Re-Enter Password <span
+                                class="text-danger">*</span></label>
+                        <i class="icofont icofont-eye-blocked pass-icon"></i>
+                        <input type="password" class="form-control" id="repass" name="repass">
+                    </div>
+                    <div class="form-group mt-3">
+                        <label class="form-label country-label" for="country">Country <span
+                                class="text-danger">*</span></label>
+                        <div class="flag-icon">
+                            <img id="selected-flag" src="https://flagcdn.com/gb.svg" width="34">
+                        </div>
+                        <select id="country" name="country" class="form-select" aria-label="Select Country"
+                            required="">
+                            <option value="" data-flag="unknown.png" selected="" disabled="">
+                                Select Country
+                            </option>
+                            <option value="ad" data-flag="ad.svg">Andorra</option>
+                            <option value="ae" data-flag="ae.svg">
+                                United Arab Emirates
+                            </option>
+                            <option value="af" data-flag="af.svg">Afghanistan</option>
+                            <option value="ag" data-flag="ag.svg">
+                                Antigua and Barbuda
+                            </option>
+                            <option value="ai" data-flag="ai.svg">Anguilla</option>
+                            <option value="al" data-flag="al.svg">Albania</option>
+                            <option value="am" data-flag="am.svg">Armenia</option>
+                            <option value="ao" data-flag="ao.svg">Angola</option>
+                            <option value="aq" data-flag="aq.svg">Antarctica</option>
+                            <option value="ar" data-flag="ar.svg">Argentina</option>
+                            <option value="as" data-flag="as.svg">
+                                American Samoa
+                            </option>
+                            <option value="at" data-flag="at.svg">Austria</option>
+                            <option value="au" data-flag="au.svg">Australia</option>
+                            <option value="aw" data-flag="aw.svg">Aruba</option>
+                            <option value="ax" data-flag="ax.svg">Åland Islands</option>
+                            <option value="az" data-flag="az.svg">Azerbaijan</option>
+                            <option value="ba" data-flag="ba.svg">
+                                Bosnia and Herzegovina
+                            </option>
+                            <option value="bb" data-flag="bb.svg">Barbados</option>
+                            <option value="bd" data-flag="bd.svg">Bangladesh</option>
+                            <option value="be" data-flag="be.svg">Belgium</option>
+                            <option value="bf" data-flag="bf.svg">Burkina Faso</option>
+                            <option value="bg" data-flag="bg.svg">Bulgaria</option>
+                            <option value="bh" data-flag="bh.svg">Bahrain</option>
+                            <option value="bi" data-flag="bi.svg">Burundi</option>
+                            <option value="bj" data-flag="bj.svg">Benin</option>
+                            <option value="bl" data-flag="bl.svg">
+                                Saint Barthélemy
+                            </option>
+                            <option value="bm" data-flag="bm.svg">Bermuda</option>
+                            <option value="bn" data-flag="bn.svg">
+                                Brunei Darussalam
+                            </option>
+                            <option value="bo" data-flag="bo.svg">Bolivia</option>
+                            <option value="bq" data-flag="bq.svg">
+                                Bonaire, Sint Eustatius and Saba
+                            </option>
+                            <option value="br" data-flag="br.svg">Brazil</option>
+                            <option value="bs" data-flag="bs.svg">Bahamas</option>
+                            <option value="bt" data-flag="bt.svg">Bhutan</option>
+                            <option value="bv" data-flag="bv.svg">Bouvet Island</option>
+                            <option value="bw" data-flag="bw.svg">Botswana</option>
+                            <option value="by" data-flag="by.svg">Belarus</option>
+                            <option value="bz" data-flag="bz.svg">Belize</option>
+                            <option value="ca" data-flag="ca.svg">Canada</option>
+                            <option value="cc" data-flag="cc.svg">
+                                Cocos (Keeling) Islands
+                            </option>
+                            <option value="cd" data-flag="cd.svg">Congo (DRC)</option>
+                            <option value="cf" data-flag="cf.svg">
+                                Central African Republic
+                            </option>
+                            <option value="cg" data-flag="cg.svg">
+                                Congo (Republic)
+                            </option>
+                            <option value="ch" data-flag="ch.svg">Switzerland</option>
+                            <option value="ci" data-flag="ci.svg">Côte d'Ivoire</option>
+                            <option value="ck" data-flag="ck.svg">Cook Islands</option>
+                            <option value="cl" data-flag="cl.svg">Chile</option>
+                            <option value="cm" data-flag="cm.svg">Cameroon</option>
+                            <option value="cn" data-flag="cn.svg">China</option>
+                            <option value="co" data-flag="co.svg">Colombia</option>
+                            <option value="cr" data-flag="cr.svg">Costa Rica</option>
+                            <option value="cu" data-flag="cu.svg">Cuba</option>
+                            <option value="cv" data-flag="cv.svg">Cape Verde</option>
+                            <option value="cw" data-flag="cw.svg">Curaçao</option>
+                            <option value="cx" data-flag="cx.svg">
+                                Christmas Island
+                            </option>
+                            <option value="cy" data-flag="cy.svg">Cyprus</option>
+                            <option value="cz" data-flag="cz.svg">Czechia</option>
+                            <option value="de" data-flag="de.svg">Germany</option>
+                            <option value="dj" data-flag="dj.svg">Djibouti</option>
+                            <option value="dk" data-flag="dk.svg">Denmark</option>
+                            <option value="dm" data-flag="dm.svg">Dominica</option>
+                            <option value="do" data-flag="do.svg">
+                                Dominican Republic
+                            </option>
+                            <option value="dz" data-flag="dz.svg">Algeria</option>
+                            <option value="ec" data-flag="ec.svg">Ecuador</option>
+                            <option value="ee" data-flag="ee.svg">Estonia</option>
+                            <option value="eg" data-flag="eg.svg">Egypt</option>
+                            <option value="eh" data-flag="eh.svg">
+                                Western Sahara
+                            </option>
+                            <option value="er" data-flag="er.svg">Eritrea</option>
+                            <option value="es" data-flag="es.svg">Spain</option>
+                            <option value="et" data-flag="et.svg">Ethiopia</option>
+                            <option value="fi" data-flag="fi.svg">Finland</option>
+                            <option value="fj" data-flag="fj.svg">Fiji</option>
+                            <option value="fk" data-flag="fk.svg">
+                                Falkland Islands
+                            </option>
+                            <option value="fm" data-flag="fm.svg">Micronesia</option>
+                            <option value="fo" data-flag="fo.svg">Faroe Islands</option>
+                            <option value="fr" data-flag="fr.svg">France</option>
+                            <option value="ga" data-flag="ga.svg">Gabon</option>
+                            <option value="gb" data-flag="gb.svg" selected="">
+                                United Kingdom
+                            </option>
+                            <option value="gd" data-flag="gd.svg">Grenada</option>
+                            <option value="ge" data-flag="ge.svg">Georgia</option>
+                            <option value="gf" data-flag="gf.svg">French Guiana</option>
+                            <option value="gg" data-flag="gg.svg">Guernsey</option>
+                            <option value="gh" data-flag="gh.svg">Ghana</option>
+                            <option value="gi" data-flag="gi.svg">Gibraltar</option>
+                            <option value="gl" data-flag="gl.svg">Greenland</option>
+                            <option value="gm" data-flag="gm.svg">Gambia</option>
+                            <option value="gn" data-flag="gn.svg">Guinea</option>
+                            <option value="gp" data-flag="gp.svg">Guadeloupe</option>
+                            <option value="gq" data-flag="gq.svg">
+                                Equatorial Guinea
+                            </option>
+                            <option value="gr" data-flag="gr.svg">Greece</option>
+                            <option value="gs" data-flag="gs.svg">
+                                South Georgia &amp; South Sandwich Islands
+                            </option>
+                            <option value="gt" data-flag="gt.svg">Guatemala</option>
+                            <option value="gu" data-flag="gu.svg">Guam</option>
+                            <option value="gw" data-flag="gw.svg">Guinea-Bissau</option>
+                            <option value="gy" data-flag="gy.svg">Guyana</option>
+                            <option value="hk" data-flag="hk.svg">Hong Kong</option>
+                            <option value="hm" data-flag="hm.svg">
+                                Heard &amp; McDonald Islands
+                            </option>
+                            <option value="hn" data-flag="hn.svg">Honduras</option>
+                            <option value="hr" data-flag="hr.svg">Croatia</option>
+                            <option value="ht" data-flag="ht.svg">Haiti</option>
+                            <option value="hu" data-flag="hu.svg">Hungary</option>
+                            <option value="id" data-flag="id.svg">Indonesia</option>
+                            <option value="ie" data-flag="ie.svg">Ireland</option>
+                            <option value="il" data-flag="il.svg">Israel</option>
+                            <option value="im" data-flag="im.svg">Isle of Man</option>
+                            <option value="in" data-flag="in.svg">India</option>
+                            <option value="io" data-flag="io.svg">
+                                British Indian Ocean Territory
+                            </option>
+                            <option value="iq" data-flag="iq.svg">Iraq</option>
+                            <option value="ir" data-flag="ir.svg">Iran</option>
+                            <option value="is" data-flag="is.svg">Iceland</option>
+                            <option value="it" data-flag="it.svg">Italy</option>
+                            <option value="je" data-flag="je.svg">Jersey</option>
+                            <option value="jm" data-flag="jm.svg">Jamaica</option>
+                            <option value="jo" data-flag="jo.svg">Jordan</option>
+                            <option value="jp" data-flag="jp.svg">Japan</option>
+                            <option value="ke" data-flag="ke.svg">Kenya</option>
+                            <option value="kg" data-flag="kg.svg">Kyrgyzstan</option>
+                            <option value="kh" data-flag="kh.svg">Cambodia</option>
+                            <option value="ki" data-flag="ki.svg">Kiribati</option>
+                            <option value="km" data-flag="km.svg">Comoros</option>
+                            <option value="kn" data-flag="kn.svg">
+                                Saint Kitts and Nevis
+                            </option>
+                            <option value="kp" data-flag="kp.svg">North Korea</option>
+                            <option value="kr" data-flag="kr.svg">South Korea</option>
+                            <option value="kw" data-flag="kw.svg">Kuwait</option>
+                            <option value="ky" data-flag="ky.svg">
+                                Cayman Islands
+                            </option>
+                            <option value="kz" data-flag="kz.svg">Kazakhstan</option>
+                            <option value="la" data-flag="la.svg">Laos</option>
+                            <option value="lb" data-flag="lb.svg">Lebanon</option>
+                            <option value="lc" data-flag="lc.svg">Saint Lucia</option>
+                            <option value="li" data-flag="li.svg">Liechtenstein</option>
+                            <option value="lk" data-flag="lk.svg">Sri Lanka</option>
+                            <option value="lr" data-flag="lr.svg">Liberia</option>
+                            <option value="ls" data-flag="ls.svg">Lesotho</option>
+                            <option value="lt" data-flag="lt.svg">Lithuania</option>
+                            <option value="lu" data-flag="lu.svg">Luxembourg</option>
+                            <option value="lv" data-flag="lv.svg">Latvia</option>
+                            <option value="ly" data-flag="ly.svg">Libya</option>
+                            <option value="ma" data-flag="ma.svg">Morocco</option>
+                            <option value="mc" data-flag="mc.svg">Monaco</option>
+                            <option value="md" data-flag="md.svg">Moldova</option>
+                            <option value="me" data-flag="me.svg">Montenegro</option>
+                            <option value="mf" data-flag="mf.svg">Saint Martin</option>
+                            <option value="mg" data-flag="mg.svg">Madagascar</option>
+                            <option value="mh" data-flag="mh.svg">
+                                Marshall Islands
+                            </option>
+                            <option value="mk" data-flag="mk.svg">
+                                North Macedonia
+                            </option>
+                            <option value="ml" data-flag="ml.svg">Mali</option>
+                            <option value="mm" data-flag="mm.svg">Myanmar</option>
+                            <option value="mn" data-flag="mn.svg">Mongolia</option>
+                            <option value="mo" data-flag="mo.svg">Macao</option>
+                            <option value="mp" data-flag="mp.svg">
+                                Northern Mariana Islands
+                            </option>
+                            <option value="mq" data-flag="mq.svg">Martinique</option>
+                            <option value="mr" data-flag="mr.svg">Mauritania</option>
+                            <option value="ms" data-flag="ms.svg">Montserrat</option>
+                            <option value="mt" data-flag="mt.svg">Malta</option>
+                            <option value="mu" data-flag="mu.svg">Mauritius</option>
+                            <option value="mv" data-flag="mv.svg">Maldives</option>
+                            <option value="mw" data-flag="mw.svg">Malawi</option>
+                            <option value="mx" data-flag="mx.svg">Mexico</option>
+                            <option value="my" data-flag="my.svg">Malaysia</option>
+                            <option value="mz" data-flag="mz.svg">Mozambique</option>
+                            <option value="na" data-flag="na.svg">Namibia</option>
+                            <option value="nc" data-flag="nc.svg">New Caledonia</option>
+                            <option value="ne" data-flag="ne.svg">Niger</option>
+                            <option value="nf" data-flag="nf.svg">
+                                Norfolk Island
+                            </option>
+                            <option value="ng" data-flag="ng.svg">Nigeria</option>
+                            <option value="ni" data-flag="ni.svg">Nicaragua</option>
+                            <option value="nl" data-flag="nl.svg">Netherlands</option>
+                            <option value="no" data-flag="no.svg">Norway</option>
+                            <option value="np" data-flag="np.svg">Nepal</option>
+                            <option value="nr" data-flag="nr.svg">Nauru</option>
+                            <option value="nu" data-flag="nu.svg">Niue</option>
+                            <option value="nz" data-flag="nz.svg">New Zealand</option>
+                            <option value="om" data-flag="om.svg">Oman</option>
+                            <option value="pa" data-flag="pa.svg">Panama</option>
+                            <option value="pe" data-flag="pe.svg">Peru</option>
+                            <option value="pf" data-flag="pf.svg">
+                                French Polynesia
+                            </option>
+                            <option value="pg" data-flag="pg.svg">
+                                Papua New Guinea
+                            </option>
+                            <option value="ph" data-flag="ph.svg">Philippines</option>
+                            <option value="pk" data-flag="pk.svg">Pakistan</option>
+                            <option value="pl" data-flag="pl.svg">Poland</option>
+                            <option value="pm" data-flag="pm.svg">
+                                Saint Pierre and Miquelon
+                            </option>
+                            <option value="pn" data-flag="pn.svg">Pitcairn</option>
+                            <option value="pr" data-flag="pr.svg">Puerto Rico</option>
+                            <option value="ps" data-flag="ps.svg">Palestine</option>
+                            <option value="pt" data-flag="pt.svg">Portugal</option>
+                            <option value="pw" data-flag="pw.svg">Palau</option>
+                            <option value="py" data-flag="py.svg">Paraguay</option>
+                            <option value="qa" data-flag="qa.svg">Qatar</option>
+                            <option value="re" data-flag="re.svg">Réunion</option>
+                            <option value="ro" data-flag="ro.svg">Romania</option>
+                            <option value="rs" data-flag="rs.svg">Serbia</option>
+                            <option value="ru" data-flag="ru.svg">Russia</option>
+                            <option value="rw" data-flag="rw.svg">Rwanda</option>
+                            <option value="sa" data-flag="sa.svg">Saudi Arabia</option>
+                            <option value="sb" data-flag="sb.svg">
+                                Solomon Islands
+                            </option>
+                            <option value="sc" data-flag="sc.svg">Seychelles</option>
+                            <option value="sd" data-flag="sd.svg">Sudan</option>
+                            <option value="se" data-flag="se.svg">Sweden</option>
+                            <option value="sg" data-flag="sg.svg">Singapore</option>
+                            <option value="sh" data-flag="sh.svg">Saint Helena</option>
+                            <option value="si" data-flag="si.svg">Slovenia</option>
+                            <option value="sj" data-flag="sj.svg">
+                                Svalbard &amp; Jan Mayen
+                            </option>
+                            <option value="sk" data-flag="sk.svg">Slovakia</option>
+                            <option value="sl" data-flag="sl.svg">Sierra Leone</option>
+                            <option value="sm" data-flag="sm.svg">San Marino</option>
+                            <option value="sn" data-flag="sn.svg">Senegal</option>
+                            <option value="so" data-flag="so.svg">Somalia</option>
+                            <option value="sr" data-flag="sr.svg">Suriname</option>
+                            <option value="ss" data-flag="ss.svg">South Sudan</option>
+                            <option value="st" data-flag="st.svg">
+                                São Tomé &amp; Príncipe
+                            </option>
+                            <option value="sv" data-flag="sv.svg">El Salvador</option>
+                            <option value="sx" data-flag="sx.svg">Sint Maarten</option>
+                            <option value="sy" data-flag="sy.svg">Syria</option>
+                            <option value="sz" data-flag="sz.svg">Eswatini</option>
+                            <option value="tc" data-flag="tc.svg">
+                                Turks &amp; Caicos Islands
+                            </option>
+                            <option value="td" data-flag="td.svg">Chad</option>
+                            <option value="tf" data-flag="tf.svg">
+                                French Southern Territories
+                            </option>
+                            <option value="tg" data-flag="tg.svg">Togo</option>
+                            <option value="th" data-flag="th.svg">Thailand</option>
+                            <option value="tj" data-flag="tj.svg">Tajikistan</option>
+                            <option value="tk" data-flag="tk.svg">Tokelau</option>
+                            <option value="tl" data-flag="tl.svg">Timor-Leste</option>
+                            <option value="tm" data-flag="tm.svg">Turkmenistan</option>
+                            <option value="tn" data-flag="tn.svg">Tunisia</option>
+                            <option value="to" data-flag="to.svg">Tonga</option>
+                            <option value="tr" data-flag="tr.svg">Turkey</option>
+                            <option value="tt" data-flag="tt.svg">
+                                Trinidad and Tobago
+                            </option>
+                            <option value="tv" data-flag="tv.svg">Tuvalu</option>
+                            <option value="tz" data-flag="tz.svg">Tanzania</option>
+                            <option value="ua" data-flag="ua.svg">Ukraine</option>
+                            <option value="ug" data-flag="ug.svg">Uganda</option>
+                            <option value="um" data-flag="um.svg">
+                                U.S. Minor Outlying Islands
+                            </option>
+                            <option value="us" data-flag="us.svg">United States</option>
+                            <option value="uy" data-flag="uy.svg">Uruguay</option>
+                            <option value="uz" data-flag="uz.svg">Uzbekistan</option>
+                            <option value="va" data-flag="va.svg">Vatican City</option>
+                            <option value="vc" data-flag="vc.svg">
+                                Saint Vincent &amp; Grenadines
+                            </option>
+                            <option value="ve" data-flag="ve.svg">Venezuela</option>
+                            <option value="vg" data-flag="vg.svg">
+                                British Virgin Islands
+                            </option>
+                            <option value="vi" data-flag="vi.svg">
+                                U.S. Virgin Islands
+                            </option>
+                            <option value="vn" data-flag="vn.svg">Vietnam</option>
+                            <option value="vu" data-flag="vu.svg">Vanuatu</option>
+                            <option value="wf" data-flag="wf.svg">
+                                Wallis &amp; Futuna
+                            </option>
+                            <option value="ws" data-flag="ws.svg">Samoa</option>
+                            <option value="ye" data-flag="ye.svg">Yemen</option>
+                            <option value="yt" data-flag="yt.svg">Mayotte</option>
+                            <option value="za" data-flag="za.svg">South Africa</option>
+                            <option value="zm" data-flag="zm.svg">Zambia</option>
+                            <option value="zw" data-flag="zw.svg">Zimbabwe</option>
+                        </select>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                            <button class="btn-quiz-start w-100">SIGN UP</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center mt-3 mb-4">
+                            <p class="mb-0">Already have an account? <a href="/login" class="text-primary">Login
+                                    here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+@media (max-width: 768px) {
+    .section-header {
+        margin-bottom: 10px;
+    }
+    .section-header:before{
+        top: auto;
+        border-top: 11px solid transparent;
+        border-right: 11px solid #d1d0d0;
+        border-bottom: 11px solid transparent;
+        transform: rotate(270deg);
+        bottom: -21%;
+        right: 50%;
+    }
+}

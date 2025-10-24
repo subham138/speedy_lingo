@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('header') %>
+<body>
+    <%- include('topbar') %>
+    <%- body %>
+    <%- include('footer') %>
+    <% if (typeof script !== 'undefined') {
+        if(Array.isArray(script)){
+            script.forEach(function(src){ %>
+                <script src="<%= src %>"></script>
+        <%  });
+        } else { %>
+            <script src="<%= script %>"></script>
+    <% }} %>
+</body>
+</html>

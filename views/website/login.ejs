@@ -1,0 +1,50 @@
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        overflow-x: hidden;
+        position: relative;
+    }
+</style>
+<!-- Particles Background -->
+<div id="particles"></div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <form action="/dashboard" method="get" class="signup-form">
+                <div class="main-card" data-aos="fade-up" style="margin-top: 80px;">
+                    <div class="text-center mb-4">
+                        <i class="icofont icofont-login signup-icon"></i>
+                        <h2 class="mt-2">Sign In to Your Account</h2>
+                    </div>
+                    <div class="form-group mt-4">
+                        <label class="form-label" for="user_id">User ID <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="user_id" name="user_id"
+                            placeholder="Enter your User ID">
+                    </div>
+                    <div class="form-group pass-container mt-3">
+                        <label class="form-label" for="password">Password <span class="text-danger">*</span></label>
+                        <i class="icofont icofont-eye-blocked pass-icon"></i>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Enter your password">
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12 text-center">
+                            <button class="btn-quiz-start w-100">SIGN IN</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center mt-3 mb-4">
+                            <p class="mb-0">Don't have an account? <a href="signup.html"
+                                    class="text-primary">Register
+                                    here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
