@@ -2,7 +2,7 @@ $(document).ready(function () {
     let currentQuestionIndex = 0;
     const questions = $('.question');
     const totalQuestions = questions.length;
-    let selectedAnswers = {};
+    let selectedAnswers = {}, selectedAns = {}, activeSection = null, ansQuest = {};
 
     const correctAnswers = {
         1: 'joyful',
@@ -43,76 +43,137 @@ $(document).ready(function () {
     // --- Event Handlers for different question types ---
 
     // Multiple Choice & Translation
-    $('.question-multiple-choice, .question-translation').on('click', '.option-item', function () {
+    var singleSelectedAns = {}, descImgSelAns = {};
+    $('.question-multiple-choice, .question-translation, .question-describe-image').on('click', '.option-item', function () {
+        activeSection = $(this).closest('.question').data('type');
+
         const qNum = $(this).closest('.question').data('qnum');
+        const word = $(this).data('value');
+        const qId = $(this).closest('.question').data('id');
         $(this).siblings().removeClass('selected wrong-answer correct-answer');
         $(this).addClass('selected'); // Add selected class for immediate feedback
-        selectedAnswers[qNum] = $(this).data('value');
+
+        ansQuest[qNum] = $(this).data('correct');
+        if (activeSection != 'describe-image'){
+            singleSelectedAns[qNum] = { ans: word, qId: qId };
+            selectedAnswers[activeSection] = singleSelectedAns;
+        }else{
+            descImgSelAns[qNum] = { ans: word, qId: qId };
+            selectedAnswers[activeSection] = descImgSelAns;
+        }
+
+        // selectedAnswers[qNum] = $(this).data('value');
     });
 
     // Fill in the Blanks
+    var fillBlanksAns = {}
     $('.blank-option').on('click', function () {
+        activeSection = $(this).closest('.question').data('type');
+        // console.log(activeSection, '+++++++++++');
+        
         const qNum = $(this).closest('.question').data('qnum');
         const word = $(this).data('word');
-        $('#blank1').text(word).addClass('filled');
+        const qId = $(this).closest('.question').data('id');
+        $(`#blank${qNum}`).text(word) //.addClass('filled');
+        ansQuest[qNum] = $(this).data('correct');
+        fillBlanksAns[qNum] = {ans: word, qId: qId};
+        
+        selectedAnswers[activeSection] = fillBlanksAns;
 
-        selectedAnswers[qNum] = word;
         $(this).addClass('selected').siblings().removeClass('selected wrong-answer correct-answer');
-
+        $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
+        $(`#blank${qNum}`).removeClass('correct-answer wrong-answer')
         // Instant visual feedback on the blank itself
-        if ($(this).data('correct')) {
-            $('#blank1').removeClass('wrong-answer').addClass('correct-answer');
-        } else {
-            $('#blank1').removeClass('correct-answer').addClass('wrong-answer');
-        }
+        // if ($(this).data('correct')) {
+        //     $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+        // } else {
+        //     $(`#blank${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+        // }
     });
 
     // Voice Question
+    var selectedVoice = [], voiseAns = {};
     $('.voice-option').on('click', function () {
+        activeSection = $(this).closest('.question').data('type');
         const qNum = $(this).closest('.question').data('qnum');
         const word = $(this).data('word');
+        const qId = $(this).closest('.question').data('id');
+        const optPosition = $(this).data('position').toString();
+        
 
-        if (!selectedAnswers[qNum]) {
-            selectedAnswers[qNum] = [];
-        }
+        // if (!selectedAnswers[qNum]) {
+        //     selectedAnswers[qNum] = [];
+        // }
 
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
-            selectedAnswers[qNum] = selectedAnswers[qNum].filter(w => w !== word);
-            $(`#voiceLine .voice-word[data-word="${word}"]`).remove();
+            selectedVoice = selectedVoice.filter(w => w !== optPosition);
+            voiseAns[qNum] = { ans: selectedVoice, qId: qId };
+            selectedAnswers[activeSection] = voiseAns;
+            $(`#voiceLine_${qNum} .voice-word[data-word="${word}"]`).remove();
         } else {
             $(this).addClass('selected');
-            selectedAnswers[qNum].push(word);
-            $('#voiceLine').append(`<span class="voice-word" data-word="${word}">${$(this).text()}</span>`);
+            selectedVoice.push(optPosition);
+            voiseAns[qNum] = { ans: selectedVoice, qId: qId };
+            selectedAnswers[activeSection] = voiseAns;
+            $(`#voiceLine_${qNum}`).append(`<span class="voice-word" data-word="${word}">${$(this).text()}</span>`);
         }
 
-        if ($('#voiceLine').is(':empty')) {
-            $('#voiceLine').text('Click options below to form the sentence.');
+        // console.log(selectedVoice, selectedAnswers);
+        
+
+        if ($(`#voiceLine_${qNum}`).is(':empty')) {
+            $(`#voiceLine_${qNum}`).text('Click options below to form the sentence.');
         }
     });
 
     // Matching Pairs
-    let selectedMatch = null;
+    let selectedMatch = null, selectMatchArr = [], matchAns = {};
     $('.matching-item').on('click', function () {
+        activeSection = $(this).closest('.question').data('type');
         const qNum = $(this).closest('.question').data('qnum');
-        if (!selectedAnswers[qNum]) selectedAnswers[qNum] = {};
+        const currParentPosition = $(this).parent().data('match-position');
+        const qId = $(this).closest('.question').data('id');
+        
+        // if (!selectedAnswers[qNum]) selectedAnswers[qNum] = {};
 
         if (selectedMatch) { // An item is already selected
             const firstItem = selectedMatch;
             const secondItem = $(this);
 
             // Prevent matching with an item from the same column
-            if (firstItem.parent().attr('id') === secondItem.parent().attr('id')) {
+            if (firstItem.parent().data('match-position') === secondItem.parent().data('match-position')) {
                 firstItem.removeClass('selected');
                 secondItem.addClass('selected');
                 selectedMatch = secondItem;
                 return;
             }
 
-            if (firstItem.data('match') === secondItem.data('match')) {
+
+            const firstMatch = firstItem.data('match');
+            const secondMatch = secondItem.data(currParentPosition === 'left' ? 'lopt-id' : 'ropt-id');
+
+            if (firstMatch === secondMatch) {
                 // Correct match
                 firstItem.add(secondItem).addClass('matched').removeClass('selected').off('click');
-                selectedAnswers[qNum][firstItem.data('match')] = secondItem.data('match');
+                var rightQuestId = 0, leftQuestId = 0;
+                
+                if (firstItem.parent().data('match-position') === 'left'){
+                    leftQuestId = firstItem.data('lopt-id');
+                    rightQuestId = secondItem.data('ropt-id');
+                }else{
+                    leftQuestId = secondItem.data('lopt-id');
+                    rightQuestId = firstItem.data('ropt-id');
+                }
+
+                selectMatchArr.push({ left_id: leftQuestId, right_id: rightQuestId });
+                // Making a deep copy of the previous array
+                let finalArr = JSON.parse(JSON.stringify(selectMatchArr))
+
+                matchAns[qNum] = { ans: finalArr, qId: qId };
+
+                selectedAnswers[activeSection] = matchAns;
+                // selectedAnswers[qNum][firstItem.data('match')] = secondItem.data('match');
             } else {
                 // Incorrect match
                 firstItem.add(secondItem).addClass('wrong-answer');
@@ -129,10 +190,46 @@ $(document).ready(function () {
 
     // Next button
     $('#nextBtn').click(function () {
-        if (currentQuestionIndex < totalQuestions - 1) {
-            currentQuestionIndex++;
-            showQuestion(currentQuestionIndex);
+        // console.log(currentQuestionIndex, '-------------');
+        let qNum = currentQuestionIndex + 1;
+
+        if (['match_pairs', 'audio_sentence'].includes(activeSection)){
+            selectMatchArr.length = 0
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            }
+            $('#clickBlocker').hide();
+            return;
         }
+
+        $('#clickBlocker').show();
+        if (ansQuest[qNum]){
+            if (activeSection == 'fill-blanks'){
+                $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+                $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
+            }
+
+            if(activeSection == 'select-correct' || activeSection == 'translation'){
+                $(`#opt-${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+            }
+        } else {
+            if (activeSection == 'fill-blanks') {
+                $(`#blank${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+                $(`#blank${qNum}`).parent().next('.wrong-answer').show()
+            }
+
+            if (activeSection == 'select-correct' || activeSection == 'translation') {
+                $(`#opt-${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+            }
+        }
+        setTimeout(() => {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            }
+            $('#clickBlocker').hide();
+        }, 3000);
     });
 
     // Previous button
@@ -145,23 +242,51 @@ $(document).ready(function () {
 
     // Submit button
     $('#submitBtn').click(function () {
-        calculateScore();
-        // Show animations on submit
-        questions.each(function () {
-            const qNum = $(this).data('qnum');
-            const type = $(this).data('type');
-            const userAnswer = selectedAnswers[qNum];
-            const isCorrect = checkAnswer(qNum, type, userAnswer);
+        // calculateScore();
+        // // Show animations on submit
+        // questions.each(function () {
+        //     const qNum = $(this).data('qnum');
+        //     const type = $(this).data('type');
+        //     const userAnswer = selectedAnswers[qNum];
+        //     const isCorrect = checkAnswer(qNum, type, userAnswer);
 
-            if (type === 'multiple-choice' || type === 'translation') {
-                const selectedOption = $(this).find('.option-item.selected');
-                if (selectedOption.length) {
-                    selectedOption.addClass(isCorrect ? 'correct-answer' : 'wrong-answer');
+        //     if (type === 'multiple-choice' || type === 'translation') {
+        //         const selectedOption = $(this).find('.option-item.selected');
+        //         if (selectedOption.length) {
+        //             selectedOption.addClass(isCorrect ? 'correct-answer' : 'wrong-answer');
+        //         }
+        //     }
+        // });        
+        $.ajax({
+            url: '/check-answer',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ answers: selectedAnswers }),
+            beforeSend: function () {
+                // Show loader
+                $('#loader-container').addClass('show');
+            },
+            success: function (res) {
+                console.log('Quiz submitted successfully:', res);
+                if(res.suc > 0){
+                    let data = res.msg
+                    localStorage.removeItem('quizScore');
+                    localStorage.removeItem('quizTotal');
+                    localStorage.removeItem('quizPercentage');
+                    localStorage.setItem('quizScore', data.score);
+                    localStorage.setItem('quizTotal', data.total);
+                    localStorage.setItem('quizPercentage', Math.round((data.score / data.total) * 100));
+
+                    setTimeout(redirectToResults, 1000);
                 }
+
+            },
+            error: function (error) { console.error('Error submitting quiz:', error); },
+            complete: function () {
+                // Hide loader
+                $('#loader-container').removeClass('show');
             }
-        });
-        // Redirect after a delay to show animations
-        setTimeout(redirectToResults, 1500);
+        })
     });
 
     function calculateScore() {
@@ -201,21 +326,180 @@ $(document).ready(function () {
     }
 
     function redirectToResults() {
-        window.location.href = 'result.html';
+        window.location.href = '/result';
     }
 
     // Play voice button
-    $('#playVoiceBtn').click(function () {
+    $('.btn-play-voice').click(function () {
         const btn = $(this);
         if (btn.hasClass('playing')) return;
+
+        const audioFileName = btn.data('audio-path');
+        if (!audioFileName) {
+            console.error('Audio file path not found in data-audio-path attribute.');
+            return;
+        }
+
+        const audio = new Audio(`/question/audio/${audioFileName}`);
+
         btn.addClass('playing').prop('disabled', true).html('<i class="icofont icofont-spinner icofont-spin me-2"></i>Playing...');
-        $('#voiceWave').css('opacity', 1);
-        setTimeout(() => {
+        const wave = btn.next('.voice-wave');
+        wave.css('opacity', 1);
+
+        audio.onended = function () {
             btn.removeClass('playing').prop('disabled', false).html('<i class="icofont icofont-play me-2"></i>Play Audio');
-            $('#voiceWave').css('opacity', 0);
-        }, 3000);
+            wave.css('opacity', 0);
+        };
+
+        audio.onerror = function () {
+            console.error('Error playing audio file.');
+            // Restore button state on error as well
+            btn.removeClass('playing').prop('disabled', false).html('<i class="icofont icofont-play me-2"></i>Play Audio');
+            wave.css('opacity', 0);
+        };
+
+        audio.play();
+    });
+
+    $('.btn-audio').click(function () {
+        const btn = $(this);
+        if (btn.hasClass('playing')) return;
+
+        const audioFileName = btn.data('audio-path');
+        if (!audioFileName) {
+            console.error('Audio file path not found in data-audio-path attribute.');
+            return;
+        }
+
+        const audio = new Audio(`/question/audio/${audioFileName}`);
+
+        btn.addClass('playing').prop('disabled', true).hide();
+        const wave = btn.next('.voice-wave');
+        wave.css('opacity', 1).show();
+
+        audio.onended = function() {
+            btn.removeClass('playing').prop('disabled', false).show();
+            wave.css('opacity', 0).hide();
+        };
+
+        audio.onerror = function() {
+            console.error('Error playing audio file.');
+            // Restore button state on error as well
+            btn.removeClass('playing').prop('disabled', false).show();
+            wave.css('opacity', 0).hide();
+        };
+
+        audio.play();
     });
 
     // Set current year
     $('#year').text(new Date().getFullYear());
+
+    ////////////////////////// ROADMAP ///////////////////////////////////
+
+    // Function to show the current question and update roadmap
+    function showQuestionRoadMap(index) {
+        questions.hide();
+        $(questions[index]).show();
+
+        // Update roadmap steps
+        $('.roadmap-step').removeClass('active completed');
+        $('.roadmap-step').each(function (i) {
+            if (i < index) {
+                $(this).addClass('completed');
+            } else if (i === index) {
+                $(this).addClass('active');
+            }
+        });
+
+        // Disable next button if on last question
+        $('#nextBtnRoadMap').prop('disabled', index >= totalQuestions - 1);
+    }
+
+    // Next button click handler
+    $('#nextBtnRoadMap').click(function () {
+        let qNum = currentQuestionIndex + 1;
+
+        if (['match_pairs', 'audio_sentence'].includes(activeSection)){
+            selectMatchArr.length = 0
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            }
+            $('#clickBlocker').hide();
+            return;
+        }
+
+        $('#clickBlocker').show();
+        if (ansQuest[qNum]){
+            if (activeSection == 'fill-blanks'){
+                $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+                $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
+            }
+
+            if(activeSection == 'select-correct' || activeSection == 'translation'){
+                $(`#opt-${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+            }
+        } else {
+            if (activeSection == 'fill-blanks') {
+                $(`#blank${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+                $(`#blank${qNum}`).parent().next('.wrong-answer').show()
+            }
+
+            if (activeSection == 'select-correct' || activeSection == 'translation') {
+                $(`#opt-${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+            }
+        }
+        setTimeout(() => {
+            $.ajax({
+                url: '/user/questions/question_save',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ answers: selectedAnswers }),
+                beforeSend: function () {
+                    // Show loader
+                    $('#loader-container').addClass('show');
+                },
+                success: function (res) {
+                    console.log('Quiz submitted successfully:', res);
+                    if (currentQuestionIndex < totalQuestions - 1) {
+                        currentQuestionIndex++;
+                        showQuestionRoadMap(currentQuestionIndex);
+                    }
+                    $('#clickBlocker').hide();
+                    // if (res.suc > 0) {
+                    //     let data = res.msg
+                    //     localStorage.removeItem('quizScore');
+                    //     localStorage.removeItem('quizTotal');
+                    //     localStorage.removeItem('quizPercentage');
+                    //     localStorage.setItem('quizScore', data.score);
+                    //     localStorage.setItem('quizTotal', data.total);
+                    //     localStorage.setItem('quizPercentage', Math.round((data.score / data.total) * 100));
+
+                    //     setTimeout(redirectToResults, 1000);
+                    // }
+
+                },
+                error: function (error) { console.error('Error submitting quiz:', error); },
+                complete: function () {
+                    // Hide loader
+                    $('#loader-container').removeClass('show');
+                }
+            })
+        }, 1500);
+    });
+
+    // Roadmap step click handler
+    $('.roadmap-step').not('.roadmap-subscribe-step').click(function () {
+        const stepIndex = $(this).index();
+        if (stepIndex < totalQuestions) {
+            currentQuestionIndex = stepIndex;
+            showQuestionRoadMap(currentQuestionIndex);
+        }
+    });
+
+    // Initialize by showing the first question
+    if (totalQuestions > 0) {
+        showQuestionRoadMap(currentQuestionIndex);
+    }
 });

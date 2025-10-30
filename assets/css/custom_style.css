@@ -1,5 +1,5 @@
 body {
-    padding-top: 85px;
+    padding-top: 75px;
     /* Adjust for fixed navbar */
     background-color: #f8f9fa;
     background-image:
@@ -287,6 +287,7 @@ footer.site-footer a {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .question{
@@ -438,6 +439,45 @@ footer.site-footer a {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+/* Level Selector Styles */
+.level-selector {
+    position: relative;
+    display: flex;
+    padding: 5px;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 50px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.level-glider {
+    position: absolute;
+    top: 5px;
+    height: calc(100% - 10px);
+    background: var(--primary-bg-gradient);
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(112, 48, 160, 0.2);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+}
+
+.level-btn {
+    color: #495057;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+    padding: 8px 25px;
+}
+
+.level-btn.active {
+    color: #ffffff;
+    box-shadow: none;
 }
 
 /* Responsive Roadmap for Mobile */

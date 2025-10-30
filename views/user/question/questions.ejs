@@ -1,0 +1,50 @@
+<div class="roadmap-container">
+    <!-- Left Sidebar: Roadmap -->
+    <aside class="roadmap-sidebar">
+        <div class="p-4">
+            <h5 class="fw-bold"><%= data.category_name %> <span class="text-muted text-small">(<%= data.subcategory_name %>)</span></h5>
+            <p class="text-muted small">
+                <%= data.questionList.length %> Questions
+            </p>
+        </div>
+        <ul class="roadmap-list">
+            <!-- <li class="roadmap-step completed">
+                <div class="roadmap-step-icon"><i class="icofont icofont-check"></i></div>
+                <div class="roadmap-step-label">Question 1</div>
+            </li> -->
+            <% if(data.questionList.length> 0){
+                for(let i=1; i<=(data.questionList.length> 10 ? 10 : data.questionList.length); i++){ %>
+                    <li class="roadmap-step <%= i === 1 ? 'active' : '' %>">
+                        <div class="roadmap-step-icon">
+                            <%= i %>
+                        </div>
+                        <div class="roadmap-step-label">Question <%= i %>
+                        </div>
+                    </li>
+                    <% } if(data.questionList.length> 9){ %>
+                        <li class="roadmap-step roadmap-subscribe-step">
+                            <div class="roadmap-subscribe-cta">
+                                <div class="p-3 text-center">
+                                    <i class="icofont icofont-lock display-4 mb-3"></i>
+                                    <h5 class="fw-bold">Unlock More</h5>
+                                    <p class="small mb-3">Subscribe to access all questions.</p>
+                                    <button class="btn btn-quiz-start btn-sm">Subscribe</button>
+                                </div>
+                            </div>
+                        </li>
+                        <% } } %>
+        </ul>
+    </aside>
+
+    <!-- Right Side: Question Area -->
+    <main class="roadmap-main-content">
+        <%- include('../../questTemplate/generate_question.ejs', {data: data.questionList }) %>
+            <!-- Navigation Buttons -->
+            <div class="text-center mt-4">
+                <button type="button" class="btn btn-primary" id="nextBtnRoadMap">
+                    Next <i class="icofont icofont-arrow-right ms-2"></i>
+                </button>
+            </div>
+    </main>
+</div>
+<script src="/js/website/quiz.js"></script>

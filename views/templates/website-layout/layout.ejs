@@ -2,6 +2,10 @@
 <html lang="en">
 <%- include('header') %>
 <body>
+    <div id="loader-container">
+        <div class="loader"></div>
+        <div class="loader-text">We are processing your result, please wait...</div>
+    </div>
     <%- include('topbar') %>
     <%- body %>
     <%- include('footer') %>
@@ -13,5 +17,17 @@
         } else { %>
             <script src="<%= script %>"></script>
     <% }} %>
+    <!-- FLASH MESSAGES SCRIPT -->
+    <% if(message){ %>
+        <script>
+            setTimeout(() => {
+                Swal.fire({
+                    title: "<%= message.title %>",
+                    text: "<%= message.msg %>",
+                    icon: "<%= message.type %>" // success, error, warning, info, question
+                });
+            }, 1000);
+        </script>
+    <% } %>
 </body>
 </html>

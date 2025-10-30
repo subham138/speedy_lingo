@@ -1,0 +1,44 @@
+<!-- Hero Section -->
+<section class="dashboard-hero parallax-section">
+    <div class="container text-center">
+        <h1 class="display-5 text-white animated-text">Welcome Back!</h1>
+        <p class="lead text-white-50 animated-text" style="animation-delay: 0.2s;">Choose an environment to start
+            learning.</p>
+    </div>
+</section>
+
+<!-- Page content -->
+<main class="container dashboard-container p-5">
+    <% if(catgList.length > 0){
+        catgList.forEach(dt => { %>
+            <div class="mb-5">
+                <h2 class="fw-bold"><%= dt.name %></h2>
+                <p class="text-muted"><%= dt.info %></p>
+                <% let subCatg = subCatgList.filter(sdt => sdt.category_id == dt.id)
+                    if(subCatg.length > 0){ %>
+                        <div class="row g-4">
+                            <% subCatg.forEach(sdt => { %> 
+                                <div class="col-lg-3 col-md-6">
+                                    <a href="/user/questions/level?catg_id=<%= dt.id %>&sub_catg_id=<%= sdt.id %>" class="text-decoration-none">
+                                        <div class="card learning-card h-100">
+                                            <div class="card-body text-center p-4">
+                                                <div class="learning-icon mb-3" style="background: <%= sdt.bg_color %>;">
+                                                    <% if(sdt.is_icon){ %>
+                                                        <i class="<%= sdt.icon %>"></i>
+                                                    <% }else{ %>
+                                                        <%= sdt.icon %>
+                                                    <% } %>
+                                                </div>
+                                                <h5 class="card-title mb-0"><%= sdt.name %></h5>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% }
+                %>
+            </div>
+        <% })
+    } %>
+</main>

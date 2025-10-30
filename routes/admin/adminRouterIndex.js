@@ -6,6 +6,7 @@ const { subCategoryRouter } = require('./subCategoryRouter');
 
 adminRouter.use('/category', categoryRouter);
 adminRouter.use('/subcategory', subCategoryRouter);
-adminRouter.use(questRouter);
+adminRouter.use('/question', questRouter);
+adminRouter.use('/assessment', require('./assessmentRouter').assessmentRouter);
 
 module.exports = {adminRouter};

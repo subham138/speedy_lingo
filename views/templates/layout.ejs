@@ -1,3 +1,29 @@
-<% if (typeof script !== 'undefined') { %>
-    <script src="<%= script %>"></script>
-<% } %>
+<!DOCTYPE html>
+<html lang="en">
+<%- include('header') %>
+<body>
+    <%- include('topbar') %>
+    <%- body %>
+    <%- include('footer') %>
+    <% if (typeof script !== 'undefined') {
+        if(Array.isArray(script)){
+            script.forEach(function(src){ %>
+                <script src="<%= src %>"></script>
+        <%  });
+        } else { %>
+            <script src="<%= script %>"></script>
+    <% }} %>
+    <!-- FLASH MESSAGES SCRIPT -->
+    <% if(message){ %>
+        <script>
+            setTimeout(() => {
+                Swal.fire({
+                    title: "<%= message.title %>",
+                    text: "<%= message.msg %>",
+                    icon: "<%= message.type %>" // success, error, warning, info, question
+                });
+            }, 1000);
+        </script>
+    <% } %>
+</body>
+</html>

@@ -14,7 +14,7 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-6">
-            <form action="/dashboard" method="get" class="signup-form">
+            <form action="/login" method="post" class="signup-form">
                 <div class="main-card" data-aos="fade-up" style="margin-top: 80px;">
                     <div class="text-center mb-4">
                         <i class="icofont icofont-login signup-icon"></i>
@@ -31,6 +31,21 @@
                         <input type="password" class="form-control" id="password" name="password"
                             placeholder="Enter your password">
                     </div>
+                    <!-- Captcha Section -->
+                    <div class="form-group mt-3">
+                        <label class="form-label" for="captcha">Captcha <span class="text-danger">*</span></label>
+                        <div class="d-flex align-items-center">
+                            <canvas id="captcha-canvas" width="200" height="60"
+                                style="border: 2px solid #dee2e6; border-radius: 8px; background: rgba(255, 255, 255, 0.9); margin-right: 10px;">
+                            </canvas>
+                            <button type="button" id="refresh-captcha" class="btn btn-outline-secondary"
+                                style="border: none; background: transparent; padding: 0; margin-right: 10px;">
+                                <i class="icofont icofont-refresh" style="font-size: 1.5rem; color: #6c757d;" id="refreshBtn"></i>
+                            </button>
+                            <input type="text" class="form-control" id="captcha-input" name="captcha" placeholder="Enter the captcha text"
+                                required style="flex: 1;">
+                        </div>
+                    </div>
                     <div class="row mt-4">
                         <div class="col-md-12 text-center">
                             <button class="btn-quiz-start w-100">SIGN IN</button>
@@ -38,7 +53,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 text-center mt-3 mb-4">
-                            <p class="mb-0">Don't have an account? <a href="signup.html"
+                            <p class="mb-0">Don't have an account? <a href="/signup"
                                     class="text-primary">Register
                                     here</a></p>
                         </div>
@@ -48,3 +63,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        generateCaptcha('<%= captcha %>')
+    })
+    $('#refreshBtn').on('click', function () {
+        $.ajax({
+            url: '/re-generate-captcha',
+            type: 'POST',
+            contentType: 'application/json',
+            data: {},
+            success: function (res) {
+                if (res.suc > 0) {
+                    generateCaptcha(res.msg)
+                }
+            },
+            error: function (error) { console.error('Error generating captcha:', error); }
+        })
+    })
+</script>

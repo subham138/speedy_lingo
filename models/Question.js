@@ -6,15 +6,25 @@ const questionSchema = new mongoose.Schema({
         type: Number,
         unique: true
     },
+    question_display_in: {
+        type: String,
+        enum: ['outside', 'inside', 'both'],
+        default: 'both'
+    },
     // --- Common Fields for all question types ---
     category_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'md_category',
         required: true
     },
     sub_category_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'md_sub_category',
+        required: true
+    },
+    question_level: {
+        type: String,
+        enum: ['beginner', 'intermediate', 'advanced'],
         required: true
     },
     question_type: {
@@ -44,18 +54,34 @@ const questionSchema = new mongoose.Schema({
     word_bank: [{ type: String }],
 
     // --- Fields for left-right matching (Type 6) ---
-    left_options: [{ id: String, text: String }],
-    right_options: [{ id: String, text: String }],
+    left_options: [{ id: String, text: String, audio: String}],
+    right_options: [{ id: String, text: String, audio: String}],
 
     // --- Fields for storing the correct answer(s) ---
     correct_answer: { type: String }, // For single-choice answers (e.g., the text of the correct option)
     correct_answers: [{ type: String }], // For multiple-choice/fill-in-the-blanks
     correct_answer_sequence: [{ type: String }], // For word order questions (Type 5)
     correct_matches: [{ left_id: String, right_id: String }], // For matching questions (Type 6)
-
-    created_at: {
+    active_flag: {
+        type: String,
+        enum: ['Y', 'N'],
+        default: 'Y'
+    },
+    created_by: {
+        type: String,
+        default: null
+    },
+    created_dt: {
         type: Date,
-        default: Date.now
+        default: null
+    },
+    modified_by: {
+        type: String,
+        default: null
+    },
+    modified_dt: {
+        type: Date,
+        default: null
     }
 }, { collection: 'md_question_answer' });
 

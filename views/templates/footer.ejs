@@ -44,8 +44,9 @@
         <hr class="my-4 opacity-25">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <p class="mb-0 small">&copy; <span id="year"></span> Speedy Lingo. All rights reserved. | Made with <i
-                        class="icofont icofont-heart-alt text-danger"></i> for language lovers.</p>
+                <p class="mb-0 small">&copy; <span id="year"></span> Speedy Lingo. All rights reserved. | Made with
+                    <i class="icofont icofont-heart-alt text-danger"></i> for language lovers.
+                </p>
             </div>
             <div class="col-md-6 text-md-end">
                 <p class="mb-0 small">"Learn a language, open a world!" 🌍</p>
@@ -56,5 +57,73 @@
 
 <!-- Bootstrap 5 JS -->
 <script src="/js/bootstrap.bundle.min.js"></script>
-<script src="/js/jquery-3.7.1.min.js"></script>
 <script src="/js/script.js"></script>
+<script src="/js/sweetalert2.all.min.js"></script>
+
+<script>
+    $(function() {
+        // Populate current year
+        $('#year').text(new Date().getFullYear());
+
+        // User data: this page expects user info to be set in localStorage by the login flow.
+        // Keys used: 'userName' and 'userImage' (image as data URL or path). If not present, fallback to Guest.
+        var name = localStorage.getItem('userName') || sessionStorage.getItem('userName') || 'Guest User';
+        var image = localStorage.getItem('userImage') || sessionStorage.getItem('userImage') || '';
+        var displayName = name;
+        var shortName = (name && name.trim().length) ? name.trim().split(' ')[0] : 'Guest';
+
+        // show name in nav (hide on small screens)
+        $('#navUserName').text(shortName);
+        $('#dropdownWelcome').text('Welcome, ' + shortName + '!');
+
+        if (image) {
+            $('#topAvatar').html('<img src="' + image + '" alt="' + displayName + '" class="avatar-img">');
+        } else {
+            // fallback to first letter
+            var letter = shortName.charAt(0).toUpperCase();
+            $('#topAvatar').text(letter);
+        }
+
+        // Logout handler
+        $('#btnLogout').on('click', function () {
+            // Clear session-local keys and redirect to login
+            sessionStorage.removeItem('userName');
+            sessionStorage.removeItem('userImage');
+            // Optionally clear localStorage if you want to fully log out
+            // localStorage.removeItem('userName');
+            // localStorage.removeItem('userImage');
+            window.location.href = 'login.html';
+        });
+    });
+</script>
+
+<script>
+    if($('.level-btn').length > 0){
+        $(document).ready(function () {
+            function moveGlider() {
+                const activeTab = $('.level-btn.active');
+                if (activeTab.length) {
+                    const glider = $('.level-glider');
+                    glider.css({
+                        left: activeTab.position().left + 'px',
+                        width: activeTab.outerWidth() + 'px'
+                    });
+                }
+            }
+            moveGlider(); // Initial position
+            $('.level-btn').on('click', function () {
+                $('.level-btn').removeClass('active');
+                $(this).addClass('active');
+                moveGlider();
+                // Add logic here to update the content of the cards below based on the selected level
+            });
+            $(window).on('resize', moveGlider); // Adjust on resize
+        });
+    }
+</script>
+
+<script>
+    function encryptData(data){
+        return window.btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    }
+</script>

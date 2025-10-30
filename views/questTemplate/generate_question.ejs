@@ -1,0 +1,48 @@
+<%
+if (data.length > 0) {
+    let qnum = 1;
+    data.forEach(dt => {
+%>
+        <!-- Dynamic Question Template (to be populated via JS) -->
+<%
+    switch (dt.question_type) {
+        case 'select_correct':
+%>
+            <%- include('select_correct.ejs', {question: dt, qnum: qnum, display: (qnum == 1 ? 'block' : 'none')}) %>
+<%
+            break;
+        case 'fill_in_blanks':
+%>
+            <%- include('fill_in_blanks.ejs', {question: dt, qnum: qnum, display: (qnum==1 ? 'block' : 'none' )}) %>
+<%
+            break;
+        case 'translate_phrase':
+%>
+            <%- include('translate_phrase.ejs', {question: dt, qnum: qnum, display: (qnum == 1 ? 'block' : 'none')}) %>
+<%
+            break;
+        case 'describe_image':
+%>
+            <%- include('describe_image.ejs', {question: dt, qnum: qnum, display: (qnum == 1 ? 'block' : 'none')}) %>
+<%
+            break;
+        case 'audio_sentence':
+%>
+            <%- include('audio_sentence.ejs', {question: dt, qnum: qnum, display: (qnum == 1 ? 'block' : 'none')}) %>
+<%
+            break;
+        case 'match_pairs':
+%>
+            <%- include('match_pairs.ejs', {question: dt, qnum: qnum, display: (qnum == 1 ? 'block' : 'none')}) %>
+<%
+            break;
+        default:
+%>
+            <div>Default content</div>
+<%
+            break;
+        }
+        qnum++;
+    });
+}
+%>

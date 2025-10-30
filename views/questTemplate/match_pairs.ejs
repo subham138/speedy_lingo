@@ -1,0 +1,53 @@
+<!-- Matching Pairs Question -->
+<div class="question question-matching animate-slide-up" data-qnum="<%= qnum %>" data-type="match_pairs" data-id="<%= question.id %>" style="display: <%= display %>;">
+    <div class="card-body p-4">
+        <div class="question-header mb-4">
+            <h4 class="card-title mb-3">
+                <i class="icofont icofont-exchange text-info me-2"></i>
+                Match the countries with their capitals.
+            </h4>
+        </div>
+        <div class="matching-container row">
+            <div class="matching-column col-md-6" data-match-position="left">
+                <% if(question.left_options.length > 0){
+                    question.left_options.forEach(opt => {
+                        var filterDt = question.correct_matches.filter(dt => dt.left_id == opt.id)
+                        var right_match_id = 0
+                        if(filterDt.length > 0) right_match_id = filterDt[0].right_id
+                        %>
+                        <div class="matching-item" data-match="<%= right_match_id %>" data-lopt-id="<%= opt.id %>"><%= opt.text %></div>
+                    <% })
+                } %>
+            </div>
+            <div class="matching-column col-md-6" data-match-position="right">
+                <% if(question.right_options.length > 0){
+                    question.right_options.forEach(opt => {
+                        var filterDt = question.correct_matches.filter(dt => dt.right_id == opt.id)
+                        var left_match_id = 0
+                        if(filterDt.length > 0) left_match_id = filterDt[0].left_id
+                        %>
+                        <div class="cust-matching-container">
+                            <div class="matching-item" data-match="<%= left_match_id %>" data-ropt-id="<%= opt.id %>">
+                                <%= opt.text %>
+                            </div>
+                            <% if(opt.audio){ %>
+                                <div class="audio-option mb-2">
+                                    <button class="btn btn-audio" data-audio-path="<%= opt.audio %>">
+                                        <i class="icofont icofont-play"></i>
+                                    </button>
+                                    <div class="voice-wave mt-3" style="display: none;">
+                                        <div class="wave-bar" style="animation-delay: 0s;"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+                                        <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% })
+                } %>
+            </div>
+        </div>
+    </div>
+</div>

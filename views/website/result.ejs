@@ -7,16 +7,19 @@
         overflow-x: hidden;
         position: relative;
     }
+    .result-container{
+        margin-top: 8%;
+    }
 </style>
 <!-- Particles Background -->
 <div id="particles"></div>
 
-<div class="container py-5">
+<div class="container result-container">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <!-- Hero Header -->
             <div class="hero-header" data-aos="fade-down">
-                <i class="bi bi-trophy-fill" style="font-size: 3rem; color: #FFD700; margin-bottom: 20px;"></i>
+                <i class="icofont icofont-trophy-alt" style="font-size: 3rem; color: #FFD700; margin-bottom: 20px;"></i>
                 <h1 class="display-4 text-white mb-3">Your Test Results</h1>
                 <p class="lead text-white-50">Félicitations! Vous avez terminé le test.</p>
             </div>
@@ -43,14 +46,14 @@
                             <h2 class="accordion-header">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#adviceCollapse">
-                                    <i class="bi bi-lightbulb me-2"></i> Undestanding Your Score
+                                    <i class="icofont icofont-light-bulb me-2"></i> Undestanding Your Score
                                 </button>
                             </h2>
                             <div id="adviceCollapse" class="accordion-collapse collapse show" data-bs-parent="#adviceAccordion">
                                 <div class="accordion-body" id="adviceBody">
                                     <div class="row align-items-center">
                                         <div class="col-md-6 text-center">
-                                            <p class="result-text">Votre Niveau est C1 !</p>
+                                            <p class="result-text">Votre Niveau est <span id="rlevel">C1</span> !</p>
                                             <img src="/images/fr_icon.png" alt="FR ISON">
                                         </div>
                                         <div class="col-md-6">
@@ -63,39 +66,29 @@
                                         </div>
                                         <div class="col-md-12 mt-2">
                                             <span class="suggestion-sub-heading">Listening</span>
-                                            <p class="suggestion-info mt-2">
-                                                I can understand extended speech even when it is not clearly structured and when relationships are only implied and not signalled explicitly. I can understand television programmes and films without too much effort.
-                                            </p>
+                                            <p class="suggestion-info mt-2" id="und-lis"></p>
                                         </div>
                                         <div class="col-md-12">
                                             <span class="suggestion-sub-heading">Reading</span>
-                                            <p class="suggestion-info mt-2">
-                                                I can understand long and complex factual and literary texts, appreciating distinctions of style. I can understand specialised articles and longer technical instructions, even when they do not relate to my field.
-                                            </p>
+                                            <p class="suggestion-info mt-2" id="und-read"></p>
                                         </div>
                                         <div class="col-md-12">
                                             <span class="suggestion-heading">The test <u>did not assess</u> your <strong>“Speaking”</strong>.</span>
                                         </div>
                                         <div class="col-md-12 mt-2">
                                             <span class="suggestion-sub-heading">Spoken Interaction</span>
-                                            <p class="suggestion-info mt-2">
-                                                I can express myself fluently and spontaneously without much obvious searching for expressions. I can use language flexibly and effectively for social and professional purposes. I can formulate ideas and opinions with precision and relate my contribution skilfully to those of other speakers.
-                                            </p>
+                                            <p class="suggestion-info mt-2" id="spe-spo-int"></p>
                                         </div>
                                         <div class="col-md-12">
                                             <span class="suggestion-sub-heading">Spoken Production</span>
-                                            <p class="suggestion-info mt-2">
-                                                I can present clear, detailed descriptions of complex subjects integrating sub-themes, developing particular points and rounding off with an appropriate conclusion.
-                                            </p>
+                                            <p class="suggestion-info mt-2" id="spe-spo-pro"></p>
                                         </div>
                                         <div class="col-md-12">
                                             <span class="suggestion-heading">The test <u>did not assess</u> your <strong>“Writing”</strong>.</span>
                                         </div>
                                         <div class="col-md-12 mt-2">
                                             <span class="suggestion-sub-heading">Writing</span>
-                                            <p class="suggestion-info mt-2">
-                                                I can express myself in clear, well-structured text, expressing points of view at some length. I can write about complex subjects in a letter, an essay or a report, underlining what I consider to be the salient issues. I can select style appropriate to the reader in mind.
-                                            </p>
+                                            <p class="suggestion-info mt-2" id="wri-wri"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -107,10 +100,10 @@
                 <!-- Action Buttons -->
                 <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="600">
                     <a href="/" class="btn btn-custom me-3">
-                        <i class="bi bi-arrow-left me-2"></i> Retake the test
+                        <i class="icofont icofont-arrow-left me-2"></i> Retake the test
                     </a>
                     <a class="btn btn-custom" href="/signup">
-                        Register with us and start learning! <i class="bi bi-arrow-right ms-2"></i>
+                        Register with us and start learning! <i class="icofont icofont-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
@@ -120,3 +113,6 @@
 
 <!-- Confetti Canvas -->
 <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+<script>
+    localStorage.setItem('assessment', `<%- JSON.stringify(data) %>`);
+</script>

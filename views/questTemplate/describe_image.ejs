@@ -1,0 +1,51 @@
+<!-- Multiple Choice Question / Select Correct One -->
+<div class="question question-describe-image animate-slide-up" data-qnum="<%= qnum %>" data-type="describe-image" data-id="<%= question.id %>" style="display: <%= display %>;">
+    <div class="card-body p-4">
+        <div class="question-header mb-4">
+            <h4 class="card-title mb-3">
+                <i class="icofont icofont-question-circle text-primary me-2"></i>
+                <%= question.question_text %>
+            </h4>
+        </div>
+        <div class="options-container row">
+            <div class="col-md-4">
+                <div class="quest-img-section">
+                    <img src="/question/image/<%= question.question_image %>" alt="" srcset="Question Image">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="quest-opt-container">
+                    <% if(question.options.length> 0){
+                        let i = 0
+                        question.options.forEach(opt => {
+                        var _correct = false
+                        if(question.correct_answer == opt.text) _correct = true
+                        %>
+                        <div class="option-item" data-value="<%= opt.text %>" data-correct="<%= _correct %>" data-qnum="<%= qnum %>" id="opt-<%= qnum %>">
+                            <div class="option-content">
+                                <span class="option-letter">
+                                    <%= String.fromCharCode(65 + i) %>
+                                </span>
+                                <span class="option-text">
+                                    <%= opt.text %>
+                                </span>
+                            </div>
+                            <div class="audio-option">
+                                <button class="btn btn-audio" data-audio-path="<%= opt.audio %>">
+                                    <i class="icofont icofont-play"></i>
+                                </button>
+                                <div class="voice-wave mt-3" style="display: none;">
+                                    <div class="wave-bar" style="animation-delay: 0s;"></div>
+                                    <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+                                    <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+                                    <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+                                    <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

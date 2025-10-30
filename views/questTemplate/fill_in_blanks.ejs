@@ -1,0 +1,20 @@
+<!-- Fill in the Blanks Question -->
+<div class="question question-fill-blanks animate-slide-up" data-qnum="<%= qnum %>" data-type="fill-blanks" data-id="<%= question.id %>" style="display: <%= display %>;">
+    <div class="card-body p-4">
+        <div class="question-header mb-4">
+            <h4 class="card-title mb-3">
+                <i class="icofont icofont-edit text-success me-2"></i> Complete the sentence:
+            </h4>
+            <p class="blank-sentence"> 
+                <% let q = question.question_text.split('_________').join(`<span class="blank" id='blank${qnum}'>__________</span>`) %>
+                <%- q %>
+            </p>
+            <p class="text-danger text-small text-center fw-bold wrong-answer" style="display: none;">You have selected a wrong answer.</p>
+        </div>
+        <div class="options-grid blanks-options">
+            <% question.options.forEach(opt => { %>
+                <div class="option-item blank-option" data-word="<%= opt.text %>" data-correct="<%= question.correct_answers.includes(opt.text) ? 'true' : 'false' %>" data-qnum="<%= qnum %>"><%= opt.text %></div>
+            <% })%>
+        </div>
+    </div>
+</div>

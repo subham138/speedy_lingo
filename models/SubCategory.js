@@ -26,6 +26,10 @@ const subCategorySchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    bg_color: {
+        type: String,
+        default: null
+    },
     created_by: {
         type: String,
         default: null

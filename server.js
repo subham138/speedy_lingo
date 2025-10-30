@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const expressLayouts = require("express-ejs-layouts");
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const fileUpload = require('express-fileupload');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,8 +16,27 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// File upload middleware
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
+
 // SET ASSETS AS A STATIC PATH //
 app.use(express.static(path.join(__dirname, "assets/")));
+
+// Set up the session middleware
+app.use(
+    session({
+        secret: "SPEEDY_LINGO_SESSION_SECRET", // Change this to a secure random string
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 3600000,
+        },
+    }),
+);
 
 app.use(cookieParser());
 app.use(expressLayouts);
@@ -26,12 +47,19 @@ app.use((req, res, next) => {
     } else {
         res.locals.layout = 'templates/website-layout/layout';
     }
+    res.locals.path = req.path;
+    res.locals.web_title = 'Speedy Lingo - Conversational Learning Platform';
+    res.locals.message = req.session.message;
+
+    delete req.session.message;
     next();
 });
 
-const { adminRouter } = require('./routes/admin/adminRouterIndex');
 const connectDB = require('./db/db');
-app.use('/admin', adminRouter);
+const { authenticateToken, setUserMiddleware } = require('./middleware/authMiddleware');
+app.use('/', require('./routes/website/websiteRouterIndex').WebsiteRouterIndex);
+app.use('/admin', require('./routes/admin/adminRouterIndex').adminRouter);
+app.use('/user', authenticateToken, setUserMiddleware, require('./routes/user/userRouterIndex').userRouterIndex);
 
 const startServer = async () => {
     try {
