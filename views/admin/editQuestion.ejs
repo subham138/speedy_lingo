@@ -1,0 +1,368 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Edit Question</h4>
+                </div>
+                <div class="card-body">
+                    <form id="questionForm" enctype="multipart/form-data">
+                        <input type="hidden" id="questionId" name="questionId" value="<%= question._id %>">
+
+                        <!-- Category Selection -->
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Category <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="category_id" name="category_id" required>
+                                <option value="">Select Category</option>
+                                <% categories.forEach(cat=> { %>
+                                    <option value="<%= cat.id %>" <%=question.category_id==cat.id ? 'selected' : '' %>>
+                                        <%= cat.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+
+                        <!-- Subcategory Selection -->
+                        <div class="mb-3">
+                            <label for="sub_category_id" class="form-label">Subcategory <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="sub_category_id" name="sub_category_id" required>
+                                <option value="">Select Subcategory</option>
+                                <% subCategories.forEach(sub=> { %>
+                                    <option value="<%= sub.id %>" data-category="<%= sub.category_id %>"
+                                        <%=question.sub_category_id==sub.id ? 'selected' : '' %>><%= sub.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+
+                        <!-- Question Level -->
+                        <div class="mb-3">
+                            <label for="question_level" class="form-label">Question Level <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="question_level" name="question_level" required>
+                                <option value="">Select Level</option>
+                                <option value="beginner" <%=question.question_level==='beginner' ? 'selected' : '' %>
+                                    >Beginner</option>
+                                <option value="intermediate" <%=question.question_level==='intermediate' ? 'selected'
+                                    : '' %>>Intermediate</option>
+                                <option value="advanced" <%=question.question_level==='advanced' ? 'selected' : '' %>
+                                    >Advanced</option>
+                            </select>
+                        </div>
+
+                        <!-- Question Type -->
+                        <div class="mb-3">
+                            <label for="question_type" class="form-label">Question Type <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="question_type" name="question_type" required>
+                                <option value="">Select Type</option>
+                                <option value="select_correct" <%=question.question_type==='select_correct' ? 'selected'
+                                    : '' %>>Select Correct</option>
+                                <option value="fill_in_blanks" <%=question.question_type==='fill_in_blanks' ? 'selected'
+                                    : '' %>>Fill in Blanks</option>
+                                <option value="translate_phrase" <%=question.question_type==='translate_phrase'
+                                    ? 'selected' : '' %>>Translate Phrase</option>
+                                <option value="describe_image" <%=question.question_type==='describe_image' ? 'selected'
+                                    : '' %>>Describe Image</option>
+                                <option value="audio_sentence" <%=question.question_type==='audio_sentence' ? 'selected'
+                                    : '' %>>Audio Sentence</option>
+                                <option value="match_pairs" <%=question.question_type==='match_pairs' ? 'selected' : ''
+                                    %>>Match Pairs</option>
+                            </select>
+                        </div>
+
+                        <!-- Question Display In -->
+                        <div class="mb-3">
+                            <label for="question_display_in" class="form-label">Display In</label>
+                            <select class="form-select" id="question_display_in" name="question_display_in">
+                                <option value="both" <%=question.question_display_in==='both' ? 'selected' : '' %>>Both
+                                </option>
+                                <option value="inside" <%=question.question_display_in==='inside' ? 'selected' : '' %>
+                                    >Inside</option>
+                                <option value="outside" <%=question.question_display_in==='outside' ? 'selected' : '' %>
+                                    >Outside</option>
+                            </select>
+                        </div>
+
+                        <!-- Common Fields -->
+                        <div class="mb-3">
+                            <label for="question_text" class="form-label">Question Text</label>
+                            <textarea class="form-control" id="question_text" name="question_text"
+                                rows="3"><%= question.question_text || '' %></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="information" class="form-label">Information (Hint)</label>
+                            <textarea class="form-control" id="information" name="information"
+                                rows="2"><%= question.information || '' %></textarea>
+                        </div>
+
+                        <!-- File Uploads -->
+                        <div class="mb-3" id="audioUpload" style="display: none;">
+                            <label for="question_audio" class="form-label">Question Audio</label>
+                            <input type="file" class="form-control" id="question_audio" name="question_audio"
+                                accept="audio/*">
+                            <% if (question.question_audio) { %>
+                                <small class="text-muted">Current: <%= question.question_audio %></small>
+                                <% } %>
+                        </div>
+
+                        <div class="mb-3" id="imageUpload" style="display: none;">
+                            <label for="question_image" class="form-label">Question Image</label>
+                            <input type="file" class="form-control" id="question_image" name="question_image"
+                                accept="image/*">
+                            <% if (question.question_image) { %>
+                                <small class="text-muted">Current: <%= question.question_image %></small>
+                                <% } %>
+                        </div>
+
+                        <!-- Options Section (for select_correct, fill_in_blanks, translate_phrase, describe_image) -->
+                        <div id="optionsSection" style="display: none;">
+                            <h5>Options</h5>
+                            <div id="optionsContainer">
+                                <% if (question.options && question.options.length> 0) { %>
+                                    <% question.options.forEach((option, index)=> { %>
+                                        <div class="option-item mb-2">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control"
+                                                    name="options[<%= index %>][text]" value="<%= option.text || '' %>">
+                                                <input type="file" class="form-control"
+                                                    name="options[<%= index %>][audio]" accept="audio/*"
+                                                    style="max-width: 200px;">
+                                                <button type="button"
+                                                    class="btn btn-danger remove-option">Remove</button>
+                                            </div>
+                                        </div>
+                                        <% }); %>
+                                            <% } %>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="addOption">Add Option</button>
+                        </div>
+
+                        <!-- Correct Answer Section -->
+                        <div class="mb-3" id="correctAnswerSection" style="display: none;">
+                            <label for="correct_answer" class="form-label">Correct Answer</label>
+                            <input type="text" class="form-control" id="correct_answer" name="correct_answer"
+                                value="<%= question.correct_answer || '' %>">
+                        </div>
+
+                        <!-- Correct Answers (Multiple) -->
+                        <div class="mb-3" id="correctAnswersSection" style="display: none;">
+                            <label class="form-label">Correct Answers (comma separated)</label>
+                            <input type="text" class="form-control" id="correct_answers" name="correct_answers"
+                                value="<%= question.correct_answers ? question.correct_answers.join(', ') : '' %>">
+                        </div>
+
+                        <!-- Word Bank (for audio_sentence) -->
+                        <div id="wordBankSection" style="display: none;">
+                            <h5>Word Bank</h5>
+                            <div id="wordBankContainer">
+                                <% if (question.word_bank && question.word_bank.length> 0) { %>
+                                    <% question.word_bank.forEach((word, index)=> { %>
+                                        <div class="word-item mb-2">
+                                            <input type="text" class="form-control" name="word_bank[<%= index %>]"
+                                                value="<%= word %>">
+                                            <button type="button" class="btn btn-danger remove-word">Remove</button>
+                                        </div>
+                                        <% }); %>
+                                            <% } %>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="addWord">Add Word</button>
+                        </div>
+
+                        <!-- Correct Answer Sequence (for audio_sentence) -->
+                        <div class="mb-3" id="sequenceSection" style="display: none;">
+                            <label class="form-label">Correct Answer Sequence (comma separated)</label>
+                            <input type="text" class="form-control" id="correct_answer_sequence"
+                                name="correct_answer_sequence"
+                                value="<%= question.correct_answer_sequence ? question.correct_answer_sequence.join(', ') : '' %>">
+                        </div>
+
+                        <!-- Match Pairs Section -->
+                        <div id="matchPairsSection" style="display: none;">
+                            <h5>Left Options</h5>
+                            <div id="leftOptionsContainer">
+                                <% if (question.left_options && question.left_options.length> 0) { %>
+                                    <% question.left_options.forEach((option, index)=> { %>
+                                        <div class="left-option-item mb-2">
+                                            <input type="text" class="form-control"
+                                                name="left_options[<%= index %>][text]"
+                                                value="<%= option.text || '' %>">
+                                            <input type="file" class="form-control"
+                                                name="left_options[<%= index %>][audio]" accept="audio/*"
+                                                style="max-width: 200px;">
+                                            <button type="button" class="btn btn-danger remove-left">Remove</button>
+                                        </div>
+                                        <% }); %>
+                                            <% } %>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="addLeftOption">Add Left Option</button>
+
+                            <h5 class="mt-3">Right Options</h5>
+                            <div id="rightOptionsContainer">
+                                <% if (question.right_options && question.right_options.length> 0) { %>
+                                    <% question.right_options.forEach((option, index)=> { %>
+                                        <div class="right-option-item mb-2">
+                                            <input type="text" class="form-control"
+                                                name="right_options[<%= index %>][text]"
+                                                value="<%= option.text || '' %>">
+                                            <input type="file" class="form-control"
+                                                name="right_options[<%= index %>][audio]" accept="audio/*"
+                                                style="max-width: 200px;">
+                                            <button type="button" class="btn btn-danger remove-right">Remove</button>
+                                        </div>
+                                        <% }); %>
+                                            <% } %>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="addRightOption">Add Right
+                                Option</button>
+
+                            <div class="mb-3">
+                                <label class="form-label">Correct Matches (JSON format)</label>
+                                <textarea class="form-control" id="correct_matches" name="correct_matches"
+                                    rows="3"><%= question.correct_matches ? JSON.stringify(question.correct_matches) : '' %></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Update Question</button>
+                        <a href="/admin/question" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Filter subcategories based on category
+        $('#category_id').change(function () {
+            const categoryId = $(this).val();
+            $('#sub_category_id option').hide();
+            $('#sub_category_id option[data-category="' + categoryId + '"]').show();
+            $('#sub_category_id').val('');
+        });
+
+        // Show/hide sections based on question type
+        $('#question_type').change(function () {
+            const type = $(this).val();
+            $('#audioUpload, #imageUpload, #optionsSection, #correctAnswerSection, #correctAnswersSection, #wordBankSection, #sequenceSection, #matchPairsSection').hide();
+
+            if (['select_correct', 'fill_in_blanks', 'translate_phrase', 'describe_image'].includes(type)) {
+                $('#optionsSection').show();
+                if (type === 'describe_image') {
+                    $('#imageUpload').show();
+                    $('#correctAnswerSection').show();
+                } else if (type === 'translate_phrase') {
+                    $('#correctAnswerSection').show();
+                } else if (type === 'fill_in_blanks') {
+                    $('#correctAnswersSection').show();
+                } else {
+                    $('#correctAnswerSection').show();
+                }
+            } else if (type === 'audio_sentence') {
+                $('#audioUpload').show();
+                $('#wordBankSection').show();
+                $('#sequenceSection').show();
+            } else if (type === 'match_pairs') {
+                $('#matchPairsSection').show();
+            }
+        });
+
+        // Trigger change on load to show correct sections
+        $('#question_type').trigger('change');
+
+        // Add/Remove options
+        $('#addOption').click(function () {
+            const index = $('#optionsContainer .option-item').length;
+            const optionHtml = `
+            <div class="option-item mb-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="options[${index}][text]" placeholder="Option Text">
+                    <input type="file" class="form-control" name="options[${index}][audio]" accept="audio/*" style="max-width: 200px;">
+                    <button type="button" class="btn btn-danger remove-option">Remove</button>
+                </div>
+            </div>
+        `;
+            $('#optionsContainer').append(optionHtml);
+        });
+
+        $(document).on('click', '.remove-option', function () {
+            $(this).closest('.option-item').remove();
+        });
+
+        // Add/Remove words
+        $('#addWord').click(function () {
+            const index = $('#wordBankContainer .word-item').length;
+            const wordHtml = `
+            <div class="word-item mb-2">
+                <input type="text" class="form-control" name="word_bank[${index}]" placeholder="Word">
+                <button type="button" class="btn btn-danger remove-word">Remove</button>
+            </div>
+        `;
+            $('#wordBankContainer').append(wordHtml);
+        });
+
+        $(document).on('click', '.remove-word', function () {
+            $(this).closest('.word-item').remove();
+        });
+
+        // Add/Remove left options
+        $('#addLeftOption').click(function () {
+            const index = $('#leftOptionsContainer .left-option-item').length;
+            const leftHtml = `
+            <div class="left-option-item mb-2">
+                <input type="text" class="form-control" name="left_options[${index}][text]" placeholder="Left Text">
+                <input type="file" class="form-control" name="left_options[${index}][audio]" accept="audio/*" style="max-width: 200px;">
+                <button type="button" class="btn btn-danger remove-left">Remove</button>
+            </div>
+        `;
+            $('#leftOptionsContainer').append(leftHtml);
+        });
+
+        $(document).on('click', '.remove-left', function () {
+            $(this).closest('.left-option-item').remove();
+        });
+
+        // Add/Remove right options
+        $('#addRightOption').click(function () {
+            const index = $('#rightOptionsContainer .right-option-item').length;
+            const rightHtml = `
+            <div class="right-option-item mb-2">
+                <input type="text" class="form-control" name="right_options[${index}][text]" placeholder="Right Text">
+                <input type="file" class="form-control" name="right_options[${index}][audio]" accept="audio/*" style="max-width: 200px;">
+                <button type="button" class="btn btn-danger remove-right">Remove</button>
+            </div>
+        `;
+            $('#rightOptionsContainer').append(rightHtml);
+        });
+
+        $(document).on('click', '.remove-right', function () {
+            $(this).closest('.right-option-item').remove();
+        });
+
+        // Form submission
+        $('#questionForm').submit(function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const questionId = $('#questionId').val();
+
+            $.ajax({
+                url: `/admin/question/${questionId}`,
+                type: 'PUT',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    Swal.fire('Success', 'Question updated successfully!', 'success')
+                        .then(() => window.location.href = '/admin/question');
+                },
+                error: function (xhr) {
+                    Swal.fire('Error', xhr.responseJSON.message, 'error');
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,44 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add New Category</h4>
+                </div>
+                <div class="card-body">
+                    <form id="categoryForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Category Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="info" class="form-label">Description/Info</label>
+                            <textarea class="form-control" id="info" name="info" rows="3"
+                                placeholder="Optional description for the category"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save Category</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#categoryForm').submit(function (e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+
+            $.post('/admin/category', formData)
+                .done(function (response) {
+                    Swal.fire('Success', 'Category added successfully!', 'success')
+                        .then(() => location.reload());
+                })
+                .fail(function (xhr) {
+                    Swal.fire('Error', xhr.responseJSON.message, 'error');
+                });
+        });
+    });
+</script>

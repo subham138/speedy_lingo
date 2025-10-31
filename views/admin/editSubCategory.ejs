@@ -1,0 +1,92 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Edit Subcategory</h4>
+                </div>
+                <div class="card-body">
+                    <form id="subCategoryForm">
+                        <input type="hidden" id="subCategoryId" name="subCategoryId" value="<%= subCategory._id %>">
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Category <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="category_id" name="category_id" required>
+                                <option value="">Select Category</option>
+                                <% categories.forEach(cat=> { %>
+                                    <option value="<%= cat.id %>" <%=subCategory.category_id==cat.id ? 'selected' : ''
+                                        %>><%= cat.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Subcategory Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="<%= subCategory.name %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_icon" name="is_icon"
+                                    <%=subCategory.is_icon ? 'checked' : '' %>>
+                                <label class="form-check-label" for="is_icon">
+                                    Has Icon
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="iconSection" style="<%= subCategory.is_icon ? '' : 'display: none;' %>">
+                            <label for="icon" class="form-label">Icon (FontAwesome class or image URL)</label>
+                            <input type="text" class="form-control" id="icon" name="icon"
+                                value="<%= subCategory.icon || '' %>"
+                                placeholder="e.g., fas fa-book or /images/icon.png">
+                        </div>
+                        <div class="mb-3">
+                            <label for="info" class="form-label">Description/Info</label>
+                            <textarea class="form-control" id="info" name="info"
+                                rows="3"><%= subCategory.info || '' %></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bg_color" class="form-label">Background Color</label>
+                            <input type="color" class="form-control" id="bg_color" name="bg_color"
+                                value="<%= subCategory.bg_color || '#ffffff' %>">
+                        </div>
+                        <button type="submit" class="btn btn-success">Update Subcategory</button>
+                        <a href="/admin/subcategory" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#is_icon').change(function () {
+            if ($(this).is(':checked')) {
+                $('#iconSection').show();
+            } else {
+                $('#iconSection').hide();
+            }
+        });
+
+        $('#subCategoryForm').submit(function (e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+            const subCategoryId = $('#subCategoryId').val();
+
+            $.ajax({
+                url: `/admin/subcategory/${subCategoryId}`,
+                type: 'PUT',
+                data: formData,
+                success: function (response) {
+                    Swal.fire('Success', 'Subcategory updated successfully!', 'success')
+                        .then(() => window.location.href = '/admin/subcategory');
+                },
+                error: function (xhr) {
+                    Swal.fire('Error', xhr.responseJSON.message, 'error');
+                }
+            });
+        });
+    });
+</script>

@@ -8,13 +8,14 @@ const subCategorySchema = new mongoose.Schema({
     },
     category_id: {
         type: Number,
+        ref: 'Category',
         required: true
     },
     name: {
         type: String,
         required: true
     },
-    is_icon:{
+    is_icon: {
         type: Boolean,
         default: true
     },

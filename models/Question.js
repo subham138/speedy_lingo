@@ -13,13 +13,13 @@ const questionSchema = new mongoose.Schema({
     },
     // --- Common Fields for all question types ---
     category_id: {
-        type: Number,
-        ref: 'md_category',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
         required: true
     },
     sub_category_id: {
-        type: Number,
-        ref: 'md_sub_category',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubCategory',
         required: true
     },
     question_level: {
@@ -54,8 +54,8 @@ const questionSchema = new mongoose.Schema({
     word_bank: [{ type: String }],
 
     // --- Fields for left-right matching (Type 6) ---
-    left_options: [{ id: String, text: String, audio: String}],
-    right_options: [{ id: String, text: String, audio: String}],
+    left_options: [{ id: String, text: String, audio: String }],
+    right_options: [{ id: String, text: String, audio: String }],
 
     // --- Fields for storing the correct answer(s) ---
     correct_answer: { type: String }, // For single-choice answers (e.g., the text of the correct option)

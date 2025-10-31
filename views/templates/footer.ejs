@@ -57,11 +57,12 @@
 
 <!-- Bootstrap 5 JS -->
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/script.js"></script>
 <script src="/js/sweetalert2.all.min.js"></script>
 
 <script>
-    $(function() {
+    $(function () {
         // Populate current year
         $('#year').text(new Date().getFullYear());
 
@@ -98,7 +99,7 @@
 </script>
 
 <script>
-    if($('.level-btn').length > 0){
+    if ($('.level-btn').length > 0) {
         $(document).ready(function () {
             function moveGlider() {
                 const activeTab = $('.level-btn.active');
@@ -123,7 +124,7 @@
 </script>
 
 <script>
-    function encryptData(data){
+    function encryptData(data) {
         return window.btoa(unescape(encodeURIComponent(JSON.stringify(data))));
     }
 </script>

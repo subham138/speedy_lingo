@@ -54,10 +54,10 @@ $(document).ready(function () {
         $(this).addClass('selected'); // Add selected class for immediate feedback
 
         ansQuest[qNum] = $(this).data('correct');
-        if (activeSection != 'describe-image'){
+        if (activeSection != 'describe-image') {
             singleSelectedAns[qNum] = { ans: word, qId: qId };
             selectedAnswers[activeSection] = singleSelectedAns;
-        }else{
+        } else {
             descImgSelAns[qNum] = { ans: word, qId: qId };
             selectedAnswers[activeSection] = descImgSelAns;
         }
@@ -70,14 +70,14 @@ $(document).ready(function () {
     $('.blank-option').on('click', function () {
         activeSection = $(this).closest('.question').data('type');
         // console.log(activeSection, '+++++++++++');
-        
+
         const qNum = $(this).closest('.question').data('qnum');
         const word = $(this).data('word');
         const qId = $(this).closest('.question').data('id');
         $(`#blank${qNum}`).text(word) //.addClass('filled');
         ansQuest[qNum] = $(this).data('correct');
-        fillBlanksAns[qNum] = {ans: word, qId: qId};
-        
+        fillBlanksAns[qNum] = { ans: word, qId: qId };
+
         selectedAnswers[activeSection] = fillBlanksAns;
 
         $(this).addClass('selected').siblings().removeClass('selected wrong-answer correct-answer');
@@ -99,7 +99,7 @@ $(document).ready(function () {
         const word = $(this).data('word');
         const qId = $(this).closest('.question').data('id');
         const optPosition = $(this).data('position').toString();
-        
+
 
         // if (!selectedAnswers[qNum]) {
         //     selectedAnswers[qNum] = [];
@@ -120,7 +120,7 @@ $(document).ready(function () {
         }
 
         // console.log(selectedVoice, selectedAnswers);
-        
+
 
         if ($(`#voiceLine_${qNum}`).is(':empty')) {
             $(`#voiceLine_${qNum}`).text('Click options below to form the sentence.');
@@ -134,7 +134,7 @@ $(document).ready(function () {
         const qNum = $(this).closest('.question').data('qnum');
         const currParentPosition = $(this).parent().data('match-position');
         const qId = $(this).closest('.question').data('id');
-        
+
         // if (!selectedAnswers[qNum]) selectedAnswers[qNum] = {};
 
         if (selectedMatch) { // An item is already selected
@@ -157,11 +157,11 @@ $(document).ready(function () {
                 // Correct match
                 firstItem.add(secondItem).addClass('matched').removeClass('selected').off('click');
                 var rightQuestId = 0, leftQuestId = 0;
-                
-                if (firstItem.parent().data('match-position') === 'left'){
+
+                if (firstItem.parent().data('match-position') === 'left') {
                     leftQuestId = firstItem.data('lopt-id');
                     rightQuestId = secondItem.data('ropt-id');
-                }else{
+                } else {
                     leftQuestId = secondItem.data('lopt-id');
                     rightQuestId = firstItem.data('ropt-id');
                 }
@@ -193,7 +193,7 @@ $(document).ready(function () {
         // console.log(currentQuestionIndex, '-------------');
         let qNum = currentQuestionIndex + 1;
 
-        if (['match_pairs', 'audio_sentence'].includes(activeSection)){
+        if (['match_pairs', 'audio_sentence'].includes(activeSection)) {
             selectMatchArr.length = 0
             if (currentQuestionIndex < totalQuestions - 1) {
                 currentQuestionIndex++;
@@ -204,13 +204,13 @@ $(document).ready(function () {
         }
 
         $('#clickBlocker').show();
-        if (ansQuest[qNum]){
-            if (activeSection == 'fill-blanks'){
+        if (ansQuest[qNum]) {
+            if (activeSection == 'fill-blanks') {
                 $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
                 $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
             }
 
-            if(activeSection == 'select-correct' || activeSection == 'translation'){
+            if (activeSection == 'select-correct' || activeSection == 'translation') {
                 $(`#opt-${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
             }
         } else {
@@ -268,7 +268,7 @@ $(document).ready(function () {
             },
             success: function (res) {
                 console.log('Quiz submitted successfully:', res);
-                if(res.suc > 0){
+                if (res.suc > 0) {
                     let data = res.msg
                     localStorage.removeItem('quizScore');
                     localStorage.removeItem('quizTotal');
@@ -377,12 +377,12 @@ $(document).ready(function () {
         const wave = btn.next('.voice-wave');
         wave.css('opacity', 1).show();
 
-        audio.onended = function() {
+        audio.onended = function () {
             btn.removeClass('playing').prop('disabled', false).show();
             wave.css('opacity', 0).hide();
         };
 
-        audio.onerror = function() {
+        audio.onerror = function () {
             console.error('Error playing audio file.');
             // Restore button state on error as well
             btn.removeClass('playing').prop('disabled', false).show();
@@ -420,7 +420,7 @@ $(document).ready(function () {
     $('#nextBtnRoadMap').click(function () {
         let qNum = currentQuestionIndex + 1;
 
-        if (['match_pairs', 'audio_sentence'].includes(activeSection)){
+        if (['match_pairs', 'audio_sentence'].includes(activeSection)) {
             selectMatchArr.length = 0
             if (currentQuestionIndex < totalQuestions - 1) {
                 currentQuestionIndex++;
@@ -431,13 +431,13 @@ $(document).ready(function () {
         }
 
         $('#clickBlocker').show();
-        if (ansQuest[qNum]){
-            if (activeSection == 'fill-blanks'){
+        if (ansQuest[qNum]) {
+            if (activeSection == 'fill-blanks') {
                 $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
                 $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
             }
 
-            if(activeSection == 'select-correct' || activeSection == 'translation'){
+            if (activeSection == 'select-correct' || activeSection == 'translation') {
                 $(`#opt-${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
             }
         } else {
@@ -462,23 +462,83 @@ $(document).ready(function () {
                 },
                 success: function (res) {
                     console.log('Quiz submitted successfully:', res);
-                    if (currentQuestionIndex < totalQuestions - 1) {
-                        currentQuestionIndex++;
-                        showQuestionRoadMap(currentQuestionIndex);
+                    if (res.suc === 1 && res.results) {
+                        // Find the result for the current question
+                        const currentResult = res.results.find(result => result.qnum === qNum);
+                        if (currentResult) {
+                            if (currentResult.is_correct) {
+                                // Correct answer popup
+                                Swal.fire({
+                                    title: '🎉 Woo. The answer is correct!',
+                                    text: 'Great job! Keep up the excellent work.',
+                                    icon: 'success',
+                                    confirmButtonText: 'Continue',
+                                    confirmButtonColor: '#28a745',
+                                    background: 'linear-gradient(135deg, #d4edda, #c3e6cb)',
+                                    color: '#155724',
+                                    showClass: {
+                                        popup: 'animate__animated animate__bounceIn'
+                                    },
+                                    hideClass: {
+                                        popup: 'animate__animated animate__bounceOut'
+                                    },
+                                    customClass: {
+                                        popup: 'swal2-custom-popup',
+                                        title: 'swal2-custom-title',
+                                        confirmButton: 'swal2-custom-confirm'
+                                    }
+                                }).then(() => {
+                                    if (currentQuestionIndex < totalQuestions - 1) {
+                                        currentQuestionIndex++;
+                                        showQuestionRoadMap(currentQuestionIndex);
+                                    }
+                                    $('#clickBlocker').hide();
+                                });
+                            } else {
+                                // Incorrect answer popup
+                                Swal.fire({
+                                    title: '😞 Oops, you gave a wrong answer!',
+                                    text: 'Don\'t worry, learning is a process. Try again next time!',
+                                    icon: 'error',
+                                    confirmButtonText: 'Continue',
+                                    confirmButtonColor: '#dc3545',
+                                    background: 'linear-gradient(135deg, #f8d7da, #f5c6cb)',
+                                    color: '#721c24',
+                                    showClass: {
+                                        popup: 'animate__animated animate__shakeX'
+                                    },
+                                    hideClass: {
+                                        popup: 'animate__animated animate__fadeOut'
+                                    },
+                                    customClass: {
+                                        popup: 'swal2-custom-popup',
+                                        title: 'swal2-custom-title',
+                                        confirmButton: 'swal2-custom-confirm'
+                                    }
+                                }).then(() => {
+                                    if (currentQuestionIndex < totalQuestions - 1) {
+                                        currentQuestionIndex++;
+                                        showQuestionRoadMap(currentQuestionIndex);
+                                    }
+                                    $('#clickBlocker').hide();
+                                });
+                            }
+                        } else {
+                            // Fallback if no result found
+                            if (currentQuestionIndex < totalQuestions - 1) {
+                                currentQuestionIndex++;
+                                showQuestionRoadMap(currentQuestionIndex);
+                            }
+                            $('#clickBlocker').hide();
+                        }
+                    } else {
+                        // Fallback for old response format or error
+                        if (currentQuestionIndex < totalQuestions - 1) {
+                            currentQuestionIndex++;
+                            showQuestionRoadMap(currentQuestionIndex);
+                        }
+                        $('#clickBlocker').hide();
                     }
-                    $('#clickBlocker').hide();
-                    // if (res.suc > 0) {
-                    //     let data = res.msg
-                    //     localStorage.removeItem('quizScore');
-                    //     localStorage.removeItem('quizTotal');
-                    //     localStorage.removeItem('quizPercentage');
-                    //     localStorage.setItem('quizScore', data.score);
-                    //     localStorage.setItem('quizTotal', data.total);
-                    //     localStorage.setItem('quizPercentage', Math.round((data.score / data.total) * 100));
-
-                    //     setTimeout(redirectToResults, 1000);
-                    // }
-
                 },
                 error: function (error) { console.error('Error submitting quiz:', error); },
                 complete: function () {

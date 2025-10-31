@@ -1,0 +1,52 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Edit Category</h4>
+                </div>
+                <div class="card-body">
+                    <form id="categoryForm">
+                        <input type="hidden" id="categoryId" name="categoryId" value="<%= category._id %>">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Category Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= category.name %>"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="info" class="form-label">Description/Info</label>
+                            <textarea class="form-control" id="info" name="info"
+                                rows="3"><%= category.info || '' %></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Update Category</button>
+                        <a href="/admin/category" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#categoryForm').submit(function (e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+            const categoryId = $('#categoryId').val();
+
+            $.ajax({
+                url: `/admin/category/${categoryId}`,
+                type: 'PUT',
+                data: formData,
+                success: function (response) {
+                    Swal.fire('Success', 'Category updated successfully!', 'success')
+                        .then(() => window.location.href = '/admin/category');
+                },
+                error: function (xhr) {
+                    Swal.fire('Error', xhr.responseJSON.message, 'error');
+                }
+            });
+        });
+    });
+</script>

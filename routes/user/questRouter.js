@@ -89,14 +89,16 @@ questRouter.post('/question_save', async (req, res) => {
     const data = req.body,
         user = req.user;
 
+    let results = [];
+
     if (data && data.answers) {
-        let score = false;
         if (Object.keys(data.answers).length > 0) {
             for (const qtype in data.answers) {
                 console.log(qtype);
                 for (const qnum in data.answers[qtype]) {
                     const ansData = data.answers[qtype][qnum];
                     let actualQuestDt = await Question.findOne({ id: ansData.qId });
+                    let score = false;
 
                     if (actualQuestDt) {
                         // console.log(actualQuestDt.correct_answers[0].toLowerCase().trim(), '++__++', ansData.ans.toLowerCase().trim());
@@ -139,7 +141,7 @@ questRouter.post('/question_save', async (req, res) => {
                                 break;
                         }
                         var chkUserAns = await UserQuestAns.findOne({ user_id: user.id, quest_id: ansData.qId })
-                        try{
+                        try {
                             if (chkUserAns) {
                                 await UserQuestAns.updateOne({ id: chkUserAns.id }, {
                                     $set: {
@@ -160,16 +162,17 @@ questRouter.post('/question_save', async (req, res) => {
                                     created_dt: dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss")
                                 })
                             }
-                        }catch(err){
+                            results.push({ qnum: parseInt(qnum), is_correct: score });
+                        } catch (err) {
                             return res.send({ suc: 0, msg: err });
                         }
                     }
                 }
             }
         }
-        res.send({ suc: 1, msg: "Question Saved Successfully" });
+        res.send({ suc: 1, msg: "Question Saved Successfully", results: results });
         // console.log('Score:', score, 'Total:', total);
     }
 })
 
-module.exports = {questRouter};
+module.exports = { questRouter };

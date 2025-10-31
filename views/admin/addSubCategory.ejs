@@ -1,0 +1,81 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add New Subcategory</h4>
+                </div>
+                <div class="card-body">
+                    <form id="subCategoryForm">
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label">Category <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="category_id" name="category_id" required>
+                                <option value="">Select Category</option>
+                                <% categories.forEach(cat=> { %>
+                                    <option value="<%= cat.id %>">
+                                        <%= cat.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Subcategory Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_icon" name="is_icon" checked>
+                                <label class="form-check-label" for="is_icon">
+                                    Has Icon
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="iconSection">
+                            <label for="icon" class="form-label">Icon (FontAwesome class or image URL)</label>
+                            <input type="text" class="form-control" id="icon" name="icon"
+                                placeholder="e.g., fas fa-book or /images/icon.png">
+                        </div>
+                        <div class="mb-3">
+                            <label for="info" class="form-label">Description/Info</label>
+                            <textarea class="form-control" id="info" name="info" rows="3"
+                                placeholder="Optional description for the subcategory"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bg_color" class="form-label">Background Color</label>
+                            <input type="color" class="form-control" id="bg_color" name="bg_color" value="#ffffff">
+                        </div>
+                        <button type="submit" class="btn btn-success">Save Subcategory</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#is_icon').change(function () {
+            if ($(this).is(':checked')) {
+                $('#iconSection').show();
+            } else {
+                $('#iconSection').hide();
+            }
+        });
+
+        $('#subCategoryForm').submit(function (e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+
+            $.post('/admin/subcategory', formData)
+                .done(function (response) {
+                    Swal.fire('Success', 'Subcategory added successfully!', 'success')
+                        .then(() => location.reload());
+                })
+                .fail(function (xhr) {
+                    Swal.fire('Error', xhr.responseJSON.message, 'error');
+                });
+        });
+    });
+</script>

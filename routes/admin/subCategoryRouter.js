@@ -1,7 +1,21 @@
 const subCategoryRouter = require('express').Router();
 
-const SubCategory = require('../../models/SubCategory'),
-dateFormat = require('dateformat');
+const SubCategory = require('../../models/SubCategory');
+const Category = require('../../models/Category');
+const dateFormat = require('dateformat');
+
+// Render add subcategory form
+subCategoryRouter.get('/add', async (req, res) => {
+    try {
+        const categories = await Category.find();
+        res.render('admin/addSubCategory', {
+            title: 'Add Subcategory',
+            categories
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error loading form', error: error.message });
+    }
+});
 
 subCategoryRouter.post('/', async (req, res) => {
     try {
