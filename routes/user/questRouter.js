@@ -2,6 +2,7 @@ const Category = require('../../models/Category');
 const Question = require('../../models/Question');
 const SubCategory = require('../../models/SubCategory');
 const UserQuestAns = require('../../models/UserQuestionAnswer');
+const UserTestSession = require('../../models/UserTestSession');
 const dateFormat = require('dateformat');
 
 const questRouter = require('express').Router();
@@ -90,6 +91,9 @@ questRouter.post('/question_save', async (req, res) => {
         user = req.user;
 
     let results = [];
+    let totalQuestions = 0;
+    let correctAnswers = 0;
+    const startTime = new Date(data.start_time || new Date());
 
     if (data && data.answers) {
         if (Object.keys(data.answers).length > 0) {
@@ -99,6 +103,7 @@ questRouter.post('/question_save', async (req, res) => {
                     const ansData = data.answers[qtype][qnum];
                     let actualQuestDt = await Question.findOne({ id: ansData.qId });
                     let score = false;
+                    totalQuestions++;
 
                     if (actualQuestDt) {
                         // console.log(actualQuestDt.correct_answers[0].toLowerCase().trim(), '++__++', ansData.ans.toLowerCase().trim());
@@ -106,11 +111,13 @@ questRouter.post('/question_save', async (req, res) => {
                             case 'select-correct':
                                 if (actualQuestDt.correct_answer.toLowerCase().trim() === ansData.ans.toLowerCase().trim()) {
                                     score = true;
+                                    correctAnswers++;
                                 }
                                 break;
                             case 'fill-blanks':
                                 if (actualQuestDt.correct_answers[0].toLowerCase().trim() === ansData.ans.toLowerCase().trim()) {
                                     score = true;
+                                    correctAnswers++;
                                 }
                                 break;
                             case 'match_pairs':
@@ -122,18 +129,21 @@ questRouter.post('/question_save', async (req, res) => {
 
                                 if (actualAns.length === currAns.length && actualAns.every(item => currAns.includes(item))) {
                                     score = true;
+                                    correctAnswers++;
                                 }
                                 break;
                             case 'audio_sentence':
                                 if (actualQuestDt.correct_answer_sequence.length === ansData.ans.length) {
                                     if (actualQuestDt.correct_answer_sequence.join(',') === ansData.ans.join(',')) {
                                         score = true;
+                                        correctAnswers++;
                                     }
                                 }
                                 break;
                             case 'describe-image':
                                 if (actualQuestDt.correct_answer.toLowerCase().trim() === ansData.ans.toLowerCase().trim()) {
                                     score = true;
+                                    correctAnswers++;
                                 }
                                 break;
 
@@ -170,7 +180,44 @@ questRouter.post('/question_save', async (req, res) => {
                 }
             }
         }
-        res.send({ suc: 1, msg: "Question Saved Successfully", results: results });
+
+        // Calculate CEFR level based on percentage
+        const percentage = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+        let cefrLevel = 'A1';
+        if (percentage >= 90) cefrLevel = 'C2';
+        else if (percentage >= 80) cefrLevel = 'C1';
+        else if (percentage >= 70) cefrLevel = 'B2';
+        else if (percentage >= 60) cefrLevel = 'B1';
+        else if (percentage >= 50) cefrLevel = 'A2';
+
+        // Create test session record
+        const endTime = new Date();
+        const durationMinutes = Math.round((endTime - startTime) / (1000 * 60));
+
+        try {
+            const sessionId = `${user.id}_${Date.now()}`;
+            await UserTestSession.create({
+                user_id: user.id,
+                session_id: sessionId,
+                category_id: data.category_id,
+                sub_category_id: data.sub_category_id,
+                quest_type: data.quest_type,
+                question_level: data.question_level,
+                total_questions: totalQuestions,
+                correct_answers: correctAnswers,
+                score_percentage: percentage,
+                cefr_level: cefrLevel,
+                start_time: startTime,
+                end_time: endTime,
+                duration_minutes: durationMinutes,
+                created_by: user.name,
+                created_dt: dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss")
+            });
+        } catch (sessionErr) {
+            console.log('Error creating test session:', sessionErr);
+        }
+
+        res.send({ suc: 1, msg: "Question Saved Successfully", results: results, score: correctAnswers, total: totalQuestions, percentage: percentage, cefr_level: cefrLevel });
         // console.log('Score:', score, 'Total:', total);
     }
 })

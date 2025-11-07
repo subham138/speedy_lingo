@@ -1,0 +1,222 @@
+<!-- Hero Section -->
+<section class="dashboard-hero parallax-section">
+    <div class="container text-center">
+        <h1 class="display-5 text-white animated-text">Test History</h1>
+        <p class="lead text-white-50 animated-text" style="animation-delay: 0.2s;">Track your learning progress and
+            achievements</p>
+    </div>
+</section>
+
+<!-- Page content -->
+<main class="container dashboard-container p-5">
+    <!-- Statistics Cards -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="icofont icofont-test-tube-alt text-primary mb-2" style="font-size: 2rem;"></i>
+                    <h4 class="card-title">
+                        <%= stats.totalTests %>
+                    </h4>
+                    <p class="card-text text-muted">Total Tests</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="icofont icofont-chart-bar-graph text-success mb-2" style="font-size: 2rem;"></i>
+                    <h4 class="card-title">
+                        <%= stats.averageScore %>%
+                    </h4>
+                    <p class="card-text text-muted">Average Score</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="icofont icofont-trophy text-warning mb-2" style="font-size: 2rem;"></i>
+                    <h4 class="card-title">
+                        <%= stats.bestScore %>%
+                    </h4>
+                    <p class="card-text text-muted">Best Score</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="icofont icofont-dart text-info mb-2" style="font-size: 2rem;"></i>
+                    <h4 class="card-title">
+                        <%= stats.recentLevel %>
+                    </h4>
+                    <p class="card-text text-muted">Current Level</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test History List -->
+    <% if(testHistory.length> 0){ %>
+        <div class="row">
+            <% testHistory.forEach(test=> { %>
+                <div class="col-lg-6 mb-4">
+                    <div class="card test-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title mb-1">
+                                        <%= test.category_name %> - <%= test.subcategory_name %>
+                                    </h5>
+                                    <p class="card-text text-muted mb-2">
+                                        <i class="icofont icofont-clock-time me-1"></i>
+                                        <%= new Date(test.end_time).toLocaleDateString() %> at <%= new
+                                                Date(test.end_time).toLocaleTimeString() %>
+                                    </p>
+                                </div>
+                                <div class="text-end">
+                                    <div
+                                        class="score-badge score-<%= test.score_percentage >= 80 ? 'excellent' : test.score_percentage >= 60 ? 'good' : 'needs-improvement' %>">
+                                        <%= test.score_percentage %>%
+                                    </div>
+                                    <small class="text-muted">CEFR: <%= test.cefr_level %></small>
+                                </div>
+                            </div>
+
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <strong>
+                                            <%= test.correct_answers %>/<%= test.total_questions %>
+                                        </strong>
+                                        <br><small class="text-muted">Correct</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <strong>
+                                            <%= test.duration_minutes %>m
+                                        </strong>
+                                        <br><small class="text-muted">Duration</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <strong>
+                                            <%= test.quest_type %>
+                                        </strong>
+                                        <br><small class="text-muted">Type</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar <%= test.score_percentage >= 80 ? 'bg-success' : test.score_percentage >= 60 ? 'bg-warning' : 'bg-danger' %>"
+                                    role="progressbar" style="width: <%= test.score_percentage %>%"
+                                    aria-valuenow="<%= test.score_percentage %>" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    Level: <%= test.question_level %>
+                                </small>
+                                <button class="btn btn-sm btn-outline-primary"
+                                    onclick="viewDetails('<%= test.session_id %>')">
+                                    <i class="icofont icofont-eye me-1"></i>View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+        <% } else { %>
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <i class="icofont icofont-test-tube display-1 text-muted mb-4"></i>
+                <h3 class="text-muted">No Test History Yet</h3>
+                <p class="text-muted mb-4">Start taking tests to see your progress here!</p>
+                <a href="/user/dashboard" class="btn btn-primary">
+                    <i class="icofont icofont-play me-2"></i>Start Learning
+                </a>
+            </div>
+            <% } %>
+</main>
+
+<style>
+    .stats-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .test-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .test-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .score-badge {
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .score-excellent {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .score-good {
+        background: linear-gradient(45deg, #ffc107, #fd7e14);
+        color: white;
+    }
+
+    .score-needs-improvement {
+        background: linear-gradient(45deg, #dc3545, #e83e8c);
+        color: white;
+    }
+
+    .stat-item {
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+    }
+
+    .progress {
+        border-radius: 4px;
+    }
+
+    .dashboard-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 0;
+        margin-top: -20px;
+    }
+
+    .dashboard-container {
+        margin-top: -50px;
+        position: relative;
+        z-index: 10;
+    }
+</style>
+
+<script>
+    function viewDetails(sessionId) {
+        // For now, just show an alert. You can expand this to show detailed results
+        alert('Detailed view for session ' + sessionId + ' will be implemented soon!');
+    }
+</script>

@@ -2,7 +2,8 @@
 <section class="living-room-hero parallax-section">
     <div class="container text-center">
         <h1 class="display-5 text-white animated-text">Living Room Learning</h1>
-        <p class="lead text-white-50 animated-text" style="animation-delay: 0.2s;">Master everyday conversations and situations in your living room environment.</p>
+        <p class="lead text-white-50 animated-text" style="animation-delay: 0.2s;">Master everyday conversations and
+            situations in your living room environment.</p>
     </div>
 </section>
 
@@ -60,7 +61,8 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
-                    <button type="button" class="btn btn-quiz-start btn-quiz w-100" data-type="learning">Start Learning</button>
+                    <button type="button" class="btn btn-quiz-start btn-quiz w-100" data-type="learning">Start
+                        Learning</button>
                 </div>
             </div>
         </div>
@@ -97,7 +99,8 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
-                    <button type="button" class="btn btn-quiz-start btn-quiz w-100" data-type="listening">Start Practice</button>
+                    <button type="button" class="btn btn-quiz-start btn-quiz w-100" data-type="listening">Start
+                        Practice</button>
                 </div>
             </div>
         </div>
@@ -134,7 +137,8 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-4 pt-0">
-                    <a href="https://outlook.office.com/bookwithme/user/c7ae99d802bc4c658c51ecb05cfa730c@esgriskviewer.com?anonymous&ep=bwmEmailSignature" target="_blank" type="button" class="btn btn-quiz-start w-100" data-type="conversation">Start Chatting</a>
+                    <a href="/user/booking" type="button" class="btn btn-quiz-start w-100"
+                        data-type="conversation">Start Chatting</a>
                 </div>
             </div>
         </div>
@@ -149,8 +153,8 @@
         const level = $('.level-btn.active').data('level')
         const catg_id = $('#catg_id').val()
         const sub_catg_id = $('#sub_catg_id').val(),
-        quest_type = $(this).data('type');
-        let enc_dt = encryptData({level, catg_id, sub_catg_id, quest_type })
+            quest_type = $(this).data('type');
+        let enc_dt = encryptData({ level, catg_id, sub_catg_id, quest_type })
         window.location.href = `/user/questions/question?enc_dt=${enc_dt}`
     })
 </script>

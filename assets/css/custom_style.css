@@ -569,3 +569,232 @@ footer.site-footer a {
         height: auto;
     }
 }
+
+/* Subscription Success Page Styles */
+.success-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    background: linear-gradient(135deg, rgba(139, 109, 245, 0.1) 0%, rgba(133, 190, 253, 0.1) 100%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+    position: relative;
+}
+
+.success-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../images/checkmark.png') no-repeat center center;
+    background-size: 200px;
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+.success-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 50px 40px;
+    box-shadow: 0 20px 60px rgba(112, 48, 160, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.success-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 109, 245, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.success-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+    position: relative;
+    animation: bounceIn 1s ease-out;
+}
+
+.success-icon i {
+    font-size: 60px;
+    color: white;
+    animation: checkmarkPulse 2s infinite;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes checkmarkPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.success-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--esg-primary);
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--esg-primary), #7030a0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.success-message {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.success-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(139, 109, 245, 0.1);
+    padding: 15px 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(139, 109, 245, 0.2);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(139, 109, 245, 0.2);
+    background: rgba(139, 109, 245, 0.15);
+}
+
+.feature-item i {
+    font-size: 1.5rem;
+    color: var(--esg-primary);
+}
+
+.feature-item span {
+    font-weight: 600;
+    color: #495057;
+}
+
+.btn-success-portal {
+    background: var(--primary-bg-gradient);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(112, 48, 160, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-success-portal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-success-portal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(112, 48, 160, 0.4);
+}
+
+.btn-success-portal:hover::before {
+    left: 100%;
+}
+
+.btn-success-portal i {
+    margin-right: 10px;
+}
+
+/* Responsive Design for Success Page */
+@media (max-width: 768px) {
+    .success-card {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+
+    .success-title {
+        font-size: 2rem;
+    }
+
+    .success-message {
+        font-size: 1rem;
+    }
+
+    .success-features {
+        gap: 15px;
+    }
+
+    .feature-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px 15px;
+    }
+
+    .btn-success-portal {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}
