@@ -2942,4 +2942,15 @@ footer a {
     .enhanced-carousel{
         height: 80vh;
     }
+    .carousel-inner {
+        height: 100%;
+    }
+
+    .enhanced-overlay {
+        padding: 35px;
+    }
+
+    .carousel-item {
+        height: 100%;
+    }
 }
