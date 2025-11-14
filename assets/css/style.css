@@ -1158,10 +1158,6 @@ footer a {
 
 /* Responsive tweaks */
 @media (max-width: 767px) {
-    .hero-section {
-        padding-top: 80px;
-    }
-
     .sticky-video {
         position: static;
     }
@@ -2944,6 +2940,10 @@ footer a {
     }
     .carousel-inner {
         height: 100%;
+    }
+    .hero-section{
+        padding-top: 65px;
+        min-height: 100vh;
     }
 
     .enhanced-overlay {
