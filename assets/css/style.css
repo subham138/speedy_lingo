@@ -72,7 +72,7 @@
 
 .enhanced-overlay {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(112, 48, 160, 0.4));
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
     padding: 60px;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
@@ -2929,5 +2929,17 @@ footer a {
 
     .result-container {
         margin-top: 25% !important;
+    }
+
+    .animated-image img {
+        height: 60px !important;
+    }
+
+    .typing-effect{
+        text-wrap: balance;
+    }
+
+    .enhanced-carousel{
+        height: 80vh;
     }
 }
