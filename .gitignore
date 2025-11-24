@@ -5,3 +5,11 @@ node_modules/
 assets/editor/*
 firebase-service-account.json
 ssl
+.env.example
+output_json.txt
+output.txt
+package-lock.json
+TODO.md
+assets/question/audio/*
+assets/question/excel/*
+assets/question/test_audio/*

@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
 const mongooseSequence = require('mongoose-sequence')(mongoose);
 
-const userSubscriptionSchema = new mongoose.Schema({
+const userTransactionSchema = new mongoose.Schema({
     id: {
         type: Number,
         unique: true
+    },
+    entry_dt:{
+        type: Date,
+        default: Date.now
     },
     user_id: {
         type: Number,
@@ -70,14 +74,14 @@ const userSubscriptionSchema = new mongoose.Schema({
         type: Date,
         default: null
     }
-}, { collection: 'td_user_subscription' });
+}, { collection: 'td_user_transaction' });
 
-userSubscriptionSchema.plugin(mongooseSequence, {
-    id: 'user_subscription_seq',
+userTransactionSchema.plugin(mongooseSequence, {
+    id: 'user_transaction_seq',
     inc_field: 'id',
     start_seq: 1
 });
 
-const UserSubscription = mongoose.model('UserSubscription', userSubscriptionSchema, 'td_user_subscription');
+const UserTransaction = mongoose.model('UserTransaction', userTransactionSchema, 'td_user_transaction');
 
-module.exports = UserSubscription;
+module.exports = UserTransaction;

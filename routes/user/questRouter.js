@@ -30,10 +30,10 @@ questRouter.get('/question', async (req, res) => {
     const questionList = await Question.aggregate([
         {
             $match: {
-                question_display_in: 'outside',
-                // category_id: data.catg_id,
-                // sub_category_id: data.sub_catg_id,
-                // question_level: data.question_level,
+                question_display_in: 'inside',
+                category_id: +data.catg_id,
+                sub_category_id: +data.sub_catg_id,
+                question_level: data.level,
                 active_flag: 'Y',
                 question_type: { $in: filterParams }
             }
@@ -81,6 +81,7 @@ questRouter.get('/question', async (req, res) => {
             }
         }
     ]);
+    
     data.questionList = questionList;
 
     res.render('user/question/questions', { title: 'Question', data: data });

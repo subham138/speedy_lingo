@@ -13,12 +13,12 @@ const questionSchema = new mongoose.Schema({
     },
     // --- Common Fields for all question types ---
     category_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Category',
         required: true
     },
     sub_category_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'SubCategory',
         required: true
     },

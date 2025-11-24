@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 module.exports = {
-  createToken: (userData) => {
+  createToken: (userData, expTime=false) => {
     return new Promise((resolve, reject) => {
       if (Object.keys(userData).length > 0) {
         const token = jwt.sign(JSON.parse(JSON.stringify(userData),true), process.env.SECRET_KEY, {
-          expiresIn: process.env.TOKEN_EXPIRATION
+          expiresIn: expTime ? expTime : process.env.TOKEN_EXPIRATION
         });
         resolve(token)
       } else {
