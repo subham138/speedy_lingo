@@ -1,12 +1,23 @@
 const quizWebRouter = require('express').Router();
 const AssessmentGrid = require('../../models/AssessmentGrid');
 const Question = require('../../models/Question');
+const { shuffleOptions } = require('../../modules/masterModules');
 
 quizWebRouter.get('/quiz', async (req, res) => {
     try{
         // @ select questions from DB based on the question_display_in as 'outside' or 'both'
-        const questList = await Question.find({ question_display_in: { $in: ['outside', 'both'] }, active_flag: 'Y' }).sort({ question_type: 1});
-        res.render('website/quiz', { title: 'Quiz', script: '/js/website/quiz.js', data: (questList ? (questList.length > 0 ? questList : []) : []) });
+        const questListRaw = await Question.find({ question_display_in: { $in: ['outside', 'both'] }, active_flag: 'Y' }).sort({ question_type: 1});
+        var questList = null
+        if (questListRaw){
+            if (questListRaw.length > 0){
+                questList = shuffleOptions([...questListRaw])
+            }
+        }
+        res.render('website/quiz', { 
+            title: 'Quiz', 
+            script: '/js/website/quiz.js', 
+            data: (questList ? (questList.length > 0 ? questList : []) : []),
+            shuffle: shuffleOptions });
     }catch(err){
         console.log(err);
     }

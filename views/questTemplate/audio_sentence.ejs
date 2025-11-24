@@ -1,5 +1,7 @@
 <!-- Voice Question -->
-<div class="question question-voice animate-slide-up" data-qnum="<%= qnum %>" data-type="audio_sentence" data-id="<%= question.id %>" style="display: <%= display %>;" data-ans-seq="<%= question.correct_answer_sequence.join(',') %>">
+<div class="question question-voice animate-slide-up" data-qnum="<%= qnum %>" data-type="audio_sentence"
+    data-id="<%= question.id %>" style="display: <%= display %>;"
+    data-ans-seq="<%= question.correct_answer_sequence.join(',') %>">
     <div class="card-body p-4">
         <div class="question-header mb-4">
             <h4 class="card-title mb-3">
@@ -21,12 +23,14 @@
             <div class="voice-line mb-4" id="voiceLine_<%= qnum %>">Click options below to form the sentence.</div>
         </div>
         <div class="options-grid voice-options">
-            <% if(question.word_bank.length > 0){
-                let i = 1
-                question.word_bank.forEach(opt => { %>
-                    <div class="option-item voice-option" data-word="<%= opt %>" data-position="<%= i++ %>"><%= opt %></div>
-                <% })
-            } %>
+            <% if(question.word_bank.length> 0){
+                let shuffledOptions = shuffle([...question.word_bank]);
+                let i = 1;
+                shuffledOptions.forEach(opt => { %>
+                <div class="option-item voice-option" data-word="<%= opt.toLowerCase() %>" data-position="<%= i++ %>">
+                    <%= opt.toLowerCase() %>
+                </div>
+                <% }) } %>
         </div>
     </div>
 </div>

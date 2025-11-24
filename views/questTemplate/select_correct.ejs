@@ -10,7 +10,8 @@
         <div class="options-grid">
             <% if(question.options.length > 0){
                 let i = 0
-                question.options.forEach(opt => {
+                let shuffledOptions = shuffle([...question.options]);
+                shuffledOptions.forEach(opt => {
                     var _correct = false
                     if(question.correct_answer == opt.text) _correct = true
                     %>
@@ -44,7 +45,7 @@
                             </div>
                         </div> -->
                     </div>
-                <% })
+                <% i++ })
             } %>
         </div>
     </div>

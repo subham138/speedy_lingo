@@ -203,33 +203,33 @@ $(document).ready(function () {
             return;
         }
 
-        $('#clickBlocker').show();
-        if (ansQuest[qNum]) {
-            if (activeSection == 'fill-blanks') {
-                $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
-                $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
-            }
+        // $('#clickBlocker').show();
+        // if (ansQuest[qNum]) {
+        //     if (activeSection == 'fill-blanks') {
+        //         $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+        //         $(`#blank${qNum}`).parent().next('.wrong-answer').hide()
+        //     }
 
-            if (activeSection == 'select-correct' || activeSection == 'translation') {
-                $(`#opt-${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
-            }
-        } else {
-            if (activeSection == 'fill-blanks') {
-                $(`#blank${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
-                $(`#blank${qNum}`).parent().next('.wrong-answer').show()
-            }
+        //     if (activeSection == 'select-correct' || activeSection == 'translation') {
+        //         $(`#opt-${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
+        //     }
+        // } else {
+        //     if (activeSection == 'fill-blanks') {
+        //         $(`#blank${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+        //         $(`#blank${qNum}`).parent().next('.wrong-answer').show()
+        //     }
 
-            if (activeSection == 'select-correct' || activeSection == 'translation') {
-                $(`#opt-${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
-            }
+        //     if (activeSection == 'select-correct' || activeSection == 'translation') {
+        //         $(`#opt-${qNum}`).removeClass('correct-answer').addClass('wrong-answer');
+        //     }
+        // }
+        // setTimeout(() => {
+        if (currentQuestionIndex < totalQuestions - 1) {
+            currentQuestionIndex++;
+            showQuestion(currentQuestionIndex);
         }
-        setTimeout(() => {
-            if (currentQuestionIndex < totalQuestions - 1) {
-                currentQuestionIndex++;
-                showQuestion(currentQuestionIndex);
-            }
-            $('#clickBlocker').hide();
-        }, 3000);
+        //     $('#clickBlocker').hide();
+        // }, 3000);
     });
 
     // Previous button
