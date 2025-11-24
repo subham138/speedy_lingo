@@ -4,6 +4,7 @@ const SubCategory = require('../../models/SubCategory');
 const UserQuestAns = require('../../models/UserQuestionAnswer');
 const UserTestSession = require('../../models/UserTestSession');
 const dateFormat = require('dateformat');
+const { shuffleOptions } = require('../../modules/masterModules');
 
 const questRouter = require('express').Router();
 
@@ -27,7 +28,7 @@ questRouter.get('/question', async (req, res) => {
     data.subcategory_name = SubCatgName.name;
 
 
-    const questionList = await Question.aggregate([
+    const questionListRaw = await Question.aggregate([
         {
             $match: {
                 question_display_in: 'inside',
@@ -81,10 +82,17 @@ questRouter.get('/question', async (req, res) => {
             }
         }
     ]);
-    
+    var questionList = null
+    if (questionListRaw.length > 0){
+        questionList = shuffleOptions([...questionListRaw])
+    }
     data.questionList = questionList;
 
-    res.render('user/question/questions', { title: 'Question', data: data });
+    res.render('user/question/questions', { 
+        title: 'Question', 
+        data: data,
+        shuffle: shuffleOptions
+    });
 })
 
 questRouter.post('/question_save', async (req, res) => {
