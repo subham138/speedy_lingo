@@ -17,7 +17,7 @@ questRouter.get('/question', async (req, res) => {
     const encDt = req.query;
     let data = Buffer.from(encDt.enc_dt, 'base64').toString('ascii');
     data = JSON.parse(data);
-    console.log(data);
+    const user = req.user;
 
     const filterParams = data.quest_type == 'learning' ? ['select_correct', 'fill_in_blanks', 'match_pairs'] : (data.quest_type == 'listening' ? ['describe_image', 'audio_sentence'] : [])
 
@@ -80,24 +80,56 @@ questRouter.get('/question', async (req, res) => {
                 category_id: 0,
                 sub_category_id: 0
             }
-        }
+        },
+        { $sort: { category_id: 1, id: 1 } },
     ]);
-    var questionList = null
-    if (questionListRaw.length > 0){
-        questionList = shuffleOptions([...questionListRaw])
+    var questionList = questionListRaw;
+
+    // console.log(questionList, 'List');
+    
+
+    // fetch user's saved answers for these questions
+    const questionIds = questionList.map(q => q.id);
+    let userAnswers = [], answeredQuestionId = [];
+    if (user) {
+        userAnswers = await UserQuestAns.find({ user_id: user.id, quest_id: { $in: questionIds } });
     }
+
+    // map user answers to question list items
+    questionList = questionList.map(q => {
+        const savedAns = userAnswers.find(ans => ans.quest_id === q.id);
+        if (savedAns)
+            answeredQuestionId.push(q.id)
+        return {
+            ...q,
+            userAnswer: savedAns ? savedAns.answer : null,
+            isCorrect: savedAns ? savedAns.is_correct : null,
+            isSkipped: savedAns ? (savedAns.answer === null || savedAns.answer === '') : true
+        };
+    });
+    // console.log(questionList);
+    
+
     data.questionList = questionList;
+
+    // max question id index
+    var lastAnswerdQuestionIndex = answeredQuestionId.length > 0 ? questionList.findIndex(dt => dt.id == Math.max(...answeredQuestionId)) : -1
 
     res.render('user/question/questions', { 
         title: 'Question', 
         data: data,
-        shuffle: shuffleOptions
+        shuffle: shuffleOptions,
+        last_ans_quest_index: lastAnswerdQuestionIndex,
+        allowQuestLeng: 10
     });
 })
 
 questRouter.post('/question_save', async (req, res) => {
     const data = req.body,
         user = req.user;
+
+    // console.log(JSON.stringify(data), 'Request Data');
+    
 
     let results = [];
     let totalQuestions = 0;
@@ -110,6 +142,8 @@ questRouter.post('/question_save', async (req, res) => {
                 console.log(qtype);
                 for (const qnum in data.answers[qtype]) {
                     const ansData = data.answers[qtype][qnum];
+                    console.log(ansData, 'ansData');
+                    
                     let actualQuestDt = await Question.findOne({ id: ansData.qId });
                     let score = false;
                     totalQuestions++;
@@ -182,6 +216,7 @@ questRouter.post('/question_save', async (req, res) => {
                                 })
                             }
                             results.push({ qnum: parseInt(qnum), is_correct: score });
+                            // return res.send({ suc: 1, msg: "Question Saved Successfully", results: results, score: correctAnswers, total: totalQuestions });
                         } catch (err) {
                             return res.send({ suc: 0, msg: err });
                         }
@@ -190,44 +225,10 @@ questRouter.post('/question_save', async (req, res) => {
             }
         }
 
-        // Calculate CEFR level based on percentage
-        const percentage = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-        let cefrLevel = 'A1';
-        if (percentage >= 90) cefrLevel = 'C2';
-        else if (percentage >= 80) cefrLevel = 'C1';
-        else if (percentage >= 70) cefrLevel = 'B2';
-        else if (percentage >= 60) cefrLevel = 'B1';
-        else if (percentage >= 50) cefrLevel = 'A2';
-
-        // Create test session record
-        const endTime = new Date();
-        const durationMinutes = Math.round((endTime - startTime) / (1000 * 60));
-
-        try {
-            const sessionId = `${user.id}_${Date.now()}`;
-            await UserTestSession.create({
-                user_id: user.id,
-                session_id: sessionId,
-                category_id: data.category_id,
-                sub_category_id: data.sub_category_id,
-                quest_type: data.quest_type,
-                question_level: data.question_level,
-                total_questions: totalQuestions,
-                correct_answers: correctAnswers,
-                score_percentage: percentage,
-                cefr_level: cefrLevel,
-                start_time: startTime,
-                end_time: endTime,
-                duration_minutes: durationMinutes,
-                created_by: user.name,
-                created_dt: dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss")
-            });
-        } catch (sessionErr) {
-            console.log('Error creating test session:', sessionErr);
-        }
-
-        res.send({ suc: 1, msg: "Question Saved Successfully", results: results, score: correctAnswers, total: totalQuestions, percentage: percentage, cefr_level: cefrLevel });
+        res.send({ suc: 1, msg: "Question Saved Successfully", results: results, score: correctAnswers, total: totalQuestions });
         // console.log('Score:', score, 'Total:', total);
+    }else{
+        res.send({suc: 0, msg: "No answer found"})
     }
 })
 

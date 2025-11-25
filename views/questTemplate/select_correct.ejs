@@ -9,13 +9,25 @@
         </div>
         <div class="options-grid">
             <% if(question.options.length > 0){
+                var hasAns = false, ans, isCorrect = false;
+                if(question.userAnswer){
+                    hasAns = true
+                    ans = Array.isArray(question.userAnswer) ? (question.userAnswer.length > 0 ? question.userAnswer[0] : '') : ''
+                    isCorrect = question.isCorrect
+                }
                 let i = 0
                 let shuffledOptions = shuffle([...question.options]);
                 shuffledOptions.forEach(opt => {
-                    var _correct = false
+                    var _correct = false, selected = '', ansType = '';
                     if(question.correct_answer == opt.text) _correct = true
+                    if(hasAns){
+                        if(opt.text == ans){
+                            selected = 'selected'
+                            ansType = isCorrect ? 'correct-answer' : 'wrong-answer'
+                        }
+                    }
                     %>
-                    <div class="option-item" data-value="<%= opt.text %>" data-correct="<%= _correct %>" data-qnum="<%= qnum %>" id="opt-<%= qnum %>">
+                    <div class="option-item <%= selected %> <%= ansType %>" data-value="<%= opt.text %>" data-correct="<%= _correct %>" data-qnum="<%= qnum %>" data-optIndex="<%= i %>" id="opt-<%= question.id %>-<%= i %>">
                         <div class="option-content">
                             <span class="option-letter"><%= String.fromCharCode(65 + i) %></span>
                             <span class="option-text"><%= opt.text %></span>

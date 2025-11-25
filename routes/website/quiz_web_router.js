@@ -17,7 +17,9 @@ quizWebRouter.get('/quiz', async (req, res) => {
             title: 'Quiz', 
             script: '/js/website/quiz.js', 
             data: (questList ? (questList.length > 0 ? questList : []) : []),
-            shuffle: shuffleOptions });
+            shuffle: shuffleOptions,
+            last_ans_quest_index: -1
+        });
     }catch(err){
         console.log(err);
     }

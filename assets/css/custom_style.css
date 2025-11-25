@@ -355,14 +355,25 @@ footer.site-footer a {
     color: var(--esg-primary);
 }
 
-.roadmap-step.completed .roadmap-step-icon {
+.roadmap-step.completed.correct .roadmap-step-icon {
     background: #28a745;
     color: white;
     font-size: 1.2rem;
 }
 
-.roadmap-step.completed .roadmap-step-label {
+.roadmap-step.completed.correct .roadmap-step-label {
     color: #28a745;
+    text-decoration: line-through;
+}
+
+.roadmap-step.completed.wrong .roadmap-step-icon {
+    background: #F44336;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.roadmap-step.completed.wrong .roadmap-step-label {
+    color: #F44336;
     text-decoration: line-through;
 }
 
