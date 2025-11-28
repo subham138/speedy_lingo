@@ -16,8 +16,8 @@
                 <p class="text-muted"><%= dt.info %></p>
                 <% let subCatg = subCatgList.filter(sdt => sdt.category_id == dt.id)
                     if(subCatg.length > 0){ %>
-                        <div class="row g-4">
-                            <% subCatg.forEach(sdt => { %> 
+                        <div class="row question-category g-4">
+                            <% subCatg.forEach(sdt => { %>
                                 <div class="col-lg-3 col-md-6">
                                     <a href="/user/questions/level?catg_id=<%= dt.id %>&sub_catg_id=<%= sdt.id %>" class="text-decoration-none">
                                         <div class="card learning-card h-100">

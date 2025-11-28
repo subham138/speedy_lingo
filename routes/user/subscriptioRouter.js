@@ -9,7 +9,9 @@ const { saveTransaction } = require('../../modules/stripeWebhookModule');
 
 subscriptionRouter.get('/', async (req, res) => {
     const user = req.user
-    const userDtls = await UserSubscription.findOne({ user_id: user.id }).sort({ created_dt: 1 })
+    const userDtls = await UserSubscription.findOne({ user_id: user.id }).sort({ created_dt: 1 }),
+        publishable_key = process.env.STRIPE_PUBLISHABLE_KEY,
+        pricing_table_id = process.env.STRIPE_PRICING_TABLE_ID;
     console.log(userDtls);
 
     if (userDtls && Object.keys(userDtls).length > 0) {
@@ -32,7 +34,8 @@ subscriptionRouter.get('/', async (req, res) => {
         }
     }
 
-    res.render('user/subscription/view', { title: 'Subscription' });
+    res.render('user/subscription/view', {
+        title: 'Subscription', publishable_key, pricing_table_id });
 })
 
 subscriptionRouter.get('/process', async (req, res) => {
@@ -170,7 +173,8 @@ subscriptionRouter.get('/process', async (req, res) => {
 })
 
 subscriptionRouter.get('/book_timeslot', (req, res) => {
-    res.render('user/subscription/book_timeslot', { title: 'Subscription' })
+    var timeslot_url = process.env.BOOK_TIMESLOT_URL
+    res.render('user/subscription/book_timeslot', { title: 'Book Timeslot', timeslot_url })
 })
 
 module.exports = { subscriptionRouter };

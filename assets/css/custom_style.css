@@ -852,6 +852,15 @@ footer.site-footer a {
     margin-right: 10px;
 }
 
+#book-timeslot{
+    height: 89vh;
+}
+#book-timeslot .container{
+    height: 100%;
+    max-width: 100vw;
+    margin: 0px;
+}
+
 /* Responsive Design for Success Page */
 @media (max-width: 768px) {
     .success-card {
@@ -880,5 +889,13 @@ footer.site-footer a {
     .btn-success-portal {
         padding: 12px 30px;
         font-size: 1rem;
+    }
+
+    .question-category {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        padding-bottom: 20px;
     }
 }
