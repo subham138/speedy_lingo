@@ -10,53 +10,69 @@ const userTransactionSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    user_id: {
+    invoice_id: {
+        type: String,
+        required: true
+    },
+    subscription_id: {
+        type: String,
+        required: true
+    },
+    due_amount: {
         type: Number,
-        required: true
     },
-    product_name: {
-        type: String,
-        required: true
-    },
-    product_stripe_id: {
-        type: String,
-        required: true
-    },
-    month_yearly: {
-        type: String,
-        required: true
-    },
-    purchase_date: {
-        type: Date,
-        required: true
-    },
-    expires_date: {
-        type: Date,
-        required: true
-    },
-    stripe_customer_id: {
-        type: String,
-        required: true
-    },
-    stripe_subscription_id: {
-        type: String,
-        required: true
-    },
-    amount: {
+    received_amount: {
         type: Number,
-        required: true
+    },
+    total_paied: {
+        type: Number,
     },
     currency: {
         type: String,
-        required: true
+        default: null
     },
-    status: {
+    stripe_customer_id: {
         type: String,
-        required: true
+    },
+    payment_method_types: {
+        type: String,
+    },
+    pay_status: {
+        type: String,
+    },
+    failed_code: {
+        type: String,
+        default: null
+    },
+    failed_decline_code: {
+        type: String,
+        default: null
+    },
+    failed_message: {
+        type: String,
+        default: null
+    },
+    failed_type: {
+        type: String,
+        default: null
+    },
+    customer_email: {
+        type: String,
+        default: null
+    },
+    customer_name: {
+        type: String,
+        default: null
+    },
+    hosted_invoice_url: {
+        type: String,
+        default: null
+    },
+    invoice_pdf: {
+        type: String,
     },
     full_json: {
         type: String,
-        required: true
     },
     created_by: {
         type: String,

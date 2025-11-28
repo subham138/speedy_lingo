@@ -23,21 +23,41 @@
             <div class="dropdown">
                 <button class="btn btn-white d-flex align-items-center" id="avatarDropdown" data-bs-toggle="dropdown"
                     aria-expanded="false" style="border:0;background:transparent;">
-                    <div id="topAvatar" class="top-avatar me-2" title="Account"></div>
-                    <span class="d-none d-md-inline-block ms-1" id="navUserName"
-                        style="font-weight:600;color:#111"></span>
+                    <div class="top-avatar me-2" title="Account">
+                        <% var userNameArr = user.name ? user.name.split(' ') : [];
+                            var userNameAvt = userNameArr.length > 0 ? `${Array.from(userNameArr[0])[0]}${userNameArr.length > 1 ? (Array.from(userNameArr[1])[0] ? Array.from(userNameArr[1])[0] : '')  : ''}` : 'U' %>
+                        <%= userNameAvt.toUpperCase() %>
+                    </div>
+                    <!-- <span class="d-none d-md-inline-block ms-1" id="navUserName" style="font-weight:600;color:#111"></span> -->
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="avatarDropdown"
-                    style="min-width:200px;">
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="avatarDropdown" style="min-width: 220px;">
                     <li>
-                        <div class="dropdown-welcome" id="dropdownWelcome">Welcome!</div>
+                        <div class="px-3 py-2 text-center">
+                            <% if (typeof user !== 'undefined' && user && user.name) { %>
+                                <h6 class="mb-1">Hello, <%= user.name %>!</h6>
+                            <% } else { %>
+                                <h6 class="mb-1">Welcome!</h6>
+                            <% } %>
+                            
+                            <% if (typeof user !== 'undefined' && user) { %>
+                                <% if (user.plan_is_active == 'Y') { %>
+                                    <span class="badge bg-warning text-dark"><i class="icofont icofont-star"></i> Premium</span>
+                                <% } else { %>
+                                    <span class="badge bg-light text-secondary">Free Plan</span>
+                                <% } %>
+                            <% } %>
+                        </div>
                     </li>
-                    <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
-                    <li><a class="dropdown-item" href="/user/subscription">Subscription</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a href="/logout" class="dropdown-item text-danger" id="btnLogout">Log Out</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/user/profile"><i class="icofont icofont-user me-2"></i>Profile</a></li>
+                    <% if (typeof user !== 'undefined' && user && user.plan_is_active != 'N') { %>
+                        <li><a class="dropdown-item fw-bold text-primary" href="/user/subscription"><i class="icofont icofont-rocket-alt-1 me-2"></i>Upgrade</a></li>
+                    <% }else{ %>    
+                        <li><a class="dropdown-item" href="/user/subscription"><i class="icofont icofont-credit-card me-2"></i>Subscription</a></li>
+                    <% } %>
+                    <li><a class="dropdown-item" href="/user/subscription/book_timeslot"><i class="icofont icofont-clock-time me-2"></i>Book a Timeslot</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a href="/logout" class="dropdown-item text-danger" id="btnLogout"><i class="icofont icofont-logout me-2"></i>Log Out</a></li>
                 </ul>
             </div>
         </div>

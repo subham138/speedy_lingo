@@ -1,25 +1,29 @@
 const mongoose = require('mongoose');
 const mongooseSequence = require('mongoose-sequence')(mongoose);
 
-const StripeProductSchema = new mongoose.Schema({
+const StripePlanSchema = new mongoose.Schema({
     id: {
         type: Number,
         unique: true
+    },
+    prod_id: {
+        type: Number,
+        required: true
     },
     stripe_product_id: {
         type: String,
         required: true
     },
-    product_type: {
+    stripe_plan_id: {
         type: String,
-        enum: ['standard'],
-        default: 'standard'
+        required: true
     },
-    description: {
-        type: String,
+    amount: {
+        type: Number,
+        required: true
     },
-    plan_name: {
-        type: String,
+    interval: {
+        type: String
     },
     created_by: {
         type: String,
@@ -37,14 +41,14 @@ const StripeProductSchema = new mongoose.Schema({
         type: Date,
         default: null
     }
-}, { collection: 'md_product' });
+}, { collection: 'md_plans' });
 
-StripeProductSchema.plugin(mongooseSequence, {
-    id: 'product_seq',
+StripePlanSchema.plugin(mongooseSequence, {
+    id: 'plans_seq',
     inc_field: 'id',
     start_seq: 1
 });
 
-const StripeProduct = mongoose.model('StripeProduct', StripeProductSchema, 'md_product');
+const StripePlan = mongoose.model('StripePlan', StripePlanSchema, 'md_plans');
 
-module.exports = StripeProduct;
+module.exports = StripePlan;

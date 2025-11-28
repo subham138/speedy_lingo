@@ -14,11 +14,15 @@ const userSubscriptionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    product_stripe_id: {
+    month_yearly: {
         type: String,
         required: true
     },
-    month_yearly: {
+    stripe_product_id: {
+        type: String,
+        required: true
+    },
+    stripe_plan_id: {
         type: String,
         required: true
     },
@@ -53,6 +57,26 @@ const userSubscriptionSchema = new mongoose.Schema({
     full_json: {
         type: String,
         required: true
+    },
+    cancel_comment: {
+        type: String,
+        default: null
+    },
+    cancel_feedback: {
+        type: String,
+        default: null
+    },
+    cancel_reason: {
+        type: String,
+        default: null
+    },
+    canceled_at: {
+        type: Date,
+        default: null
+    },
+    canceled_json: {
+        type: String,
+        default: null
     },
     created_by: {
         type: String,

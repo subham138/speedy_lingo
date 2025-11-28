@@ -4,6 +4,7 @@ const expressLayouts = require("express-ejs-layouts");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,6 +12,8 @@ const port = process.env.PORT || 3000;
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use('/webhook', express.raw({ type: 'application/json' }), require("./routes/StripeWebhookRouter").StripeWebhookRouter);
 
 // Middleware to parse JSON and urlencoded data
 app.use(express.json());
@@ -60,7 +63,6 @@ const { authenticateToken, setUserMiddleware, authCheckForLogin } = require('./m
 app.use('/', authCheckForLogin, setUserMiddleware, require('./routes/website/websiteRouterIndex').WebsiteRouterIndex);
 app.use('/admin', require('./routes/admin/adminRouterIndex').adminRouter);
 app.use('/user', authenticateToken, setUserMiddleware, require('./routes/user/userRouterIndex').userRouterIndex);
-
 const startServer = async () => {
     try {
         await connectDB();

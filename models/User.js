@@ -51,6 +51,23 @@ const userSchema = new mongoose.Schema({
         enum: ['Y', 'N'],
         default: 'Y'
     },
+    plan_is_active: {
+        type: String,
+        enum: ['Y', 'N'],
+        default: 'N'
+    },
+    active_pan_id: {
+        type: Number,
+        default: null
+    },
+    plan_start_dt: {
+        type: Date,
+        default: null
+    },
+    plan_end_dt: {
+        type: Date,
+        default: null
+    },
     created_by: {
         type: String,
         default: null
