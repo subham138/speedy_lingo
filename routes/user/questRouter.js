@@ -10,6 +10,9 @@ const questRouter = require('express').Router();
 
 questRouter.get('/level', async (req, res) => {
     const data = req.query;
+    const SubCatgName = await SubCategory.findOne({ id: data.sub_catg_id });
+
+    data.subcategory_name = SubCatgName.name;
     res.render('user/question/questionLevel', { title: 'Question Level', queryData: data });
 })
 
