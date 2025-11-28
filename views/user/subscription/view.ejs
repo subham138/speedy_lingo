@@ -4,8 +4,8 @@
         <h2 class="text-center mb-5 fw-bold">Choose Your Plan</h2>
         <div class="row g-4 justify-content-center">
             <div class="com-md-12">
-                <stripe-pricing-table pricing-table-id="<%= publishable_key %>"
-                    publishable-key="<%= pricing_table_id %>"
+                <stripe-pricing-table pricing-table-id="<%= pricing_table_id %>"
+                    publishable-key="<%= publishable_key %>"
                     customer-email="<%= user.email %>"
                     customer-id="<%= user.stripe_customer_id !=='undefined' || user.stripe_customer_id ? user.stripe_customer_id : '' %>"
                     >
