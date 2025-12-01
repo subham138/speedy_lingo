@@ -1405,7 +1405,7 @@ footer a {
 }
 
 .btn-play-voice {
-    background: linear-gradient(45deg, #ff6b35, #f7931e);
+    background: var(--primary-bg-gradient);
     border: none;
     color: white;
     padding: 15px 30px;
@@ -1418,7 +1418,7 @@ footer a {
 
 .btn-play-voice:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: var(--primary-bg-gradient-hover);
 }
 
 .voice-wave {
@@ -2490,7 +2490,7 @@ footer a {
 }
 
 .btn-play-voice {
-    background: linear-gradient(45deg, #ff6b35, #f7931e);
+    background: var(--primary-bg-gradient); /* linear-gradient(45deg, #ff6b35, #f7931e); */
     border: none;
     color: white;
     padding: 15px 30px;
@@ -2498,16 +2498,16 @@ footer a {
     font-weight: 600;
     font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+    box-shadow: var(--primary-bg-gradient-hover);
 }
 
 .btn-play-voice:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: var(--primary-bg-gradient-hover);
 }
 
 .btn-audio{
-    background: linear-gradient(45deg, #ff6b35, #f7931e);
+    background: var(--primary-bg-gradient);
     border: none;
     color: white;
     padding: 8px 15px;
@@ -2515,11 +2515,12 @@ footer a {
     font-weight: 600;
     font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 5px 15px rgb(198 209 235);
 }
 .btn-audio:hover {
+    color: white !important;
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 25px rgb(181 200 255);
 }
 
 .voice-wave {
@@ -2899,12 +2900,29 @@ footer a {
 /* Responsive Design */
 @media (max-width: 768px) {
     .options-grid {
-        grid-template-columns: 1fr;
+        /* grid-template-columns: 1fr; */
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .matching-container {
-        flex-direction: column;
-        gap: 20px;
+        /* flex-direction: column; */
+        /* gap: 20px; */
+        flex-direction: row;
+        gap: 0px;
+    }
+    .matching-column{
+        gap: 5px;
+    }
+    .matching-item, .matching-target{
+        min-height: 105px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .matching-column .cust-matching-container .audio-option {
+        display: none;
     }
 
     .question-header h4 {
@@ -2917,6 +2935,8 @@ footer a {
 
     .voice-line {
         font-size: 14px;
+        flex-wrap: wrap;
+        gap: 5px;
     }
 
     .level-btn {

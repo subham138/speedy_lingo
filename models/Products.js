@@ -21,6 +21,10 @@ const StripeProductSchema = new mongoose.Schema({
     plan_name: {
         type: String,
     },
+    allowed_question:{
+        type: Number,
+        default: 0
+    },
     created_by: {
         type: String,
         default: null

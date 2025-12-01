@@ -37,7 +37,7 @@
                                     <i class="icofont icofont-lock display-4 mb-3"></i>
                                     <h5 class="fw-bold">Unlock More</h5>
                                     <p class="small mb-3">Subscribe to access all questions.</p>
-                                    <button class="btn btn-quiz-start btn-sm">Subscribe</button>
+                                    <a href="/user/subscription" class="btn btn-quiz-start btn-sm">Subscribe</a>
                                 </div>
                             </div>
                         </li>
@@ -316,63 +316,75 @@
                         const currentResult = res.results.find(result => result.qnum === qNum);
                         if (currentResult) {
                             if (currentResult.is_correct) {
+                                if (currentQuestionIndex < totalQuestions - 1) {
+                                    var prevQuest = currentQuestionIndex
+                                    currentQuestionIndex++;
+                                    showQuestionRoadMap(currentQuestionIndex, prevQuest, currentResult.is_correct);
+                                }
+                                $('#clickBlocker').hide();
                                 // Correct answer popup
-                                Swal.fire({
-                                    title: '🎉 Woo. The answer is correct!',
-                                    text: 'Great job! Keep up the excellent work.',
-                                    icon: 'success',
-                                    confirmButtonText: 'Continue',
-                                    confirmButtonColor: '#28a745',
-                                    background: 'linear-gradient(135deg, #d4edda, #c3e6cb)',
-                                    color: '#155724',
-                                    showClass: {
-                                        popup: 'animate__animated animate__bounceIn'
-                                    },
-                                    hideClass: {
-                                        popup: 'animate__animated animate__bounceOut'
-                                    },
-                                    customClass: {
-                                        popup: 'swal2-custom-popup',
-                                        title: 'swal2-custom-title',
-                                        confirmButton: 'swal2-custom-confirm'
-                                    }
-                                }).then(() => {
-                                    if (currentQuestionIndex < totalQuestions - 1) {
-                                        var prevQuest = currentQuestionIndex
-                                        currentQuestionIndex++;
-                                        showQuestionRoadMap(currentQuestionIndex, prevQuest, currentResult.is_correct);
-                                    }
-                                    $('#clickBlocker').hide();
-                                });
+                                // Swal.fire({
+                                //     title: '🎉 Woo. The answer is correct!',
+                                //     text: 'Great job! Keep up the excellent work.',
+                                //     icon: 'success',
+                                //     confirmButtonText: 'Continue',
+                                //     confirmButtonColor: '#28a745',
+                                //     background: 'linear-gradient(135deg, #d4edda, #c3e6cb)',
+                                //     color: '#155724',
+                                //     showClass: {
+                                //         popup: 'animate__animated animate__bounceIn'
+                                //     },
+                                //     hideClass: {
+                                //         popup: 'animate__animated animate__bounceOut'
+                                //     },
+                                //     customClass: {
+                                //         popup: 'swal2-custom-popup',
+                                //         title: 'swal2-custom-title',
+                                //         confirmButton: 'swal2-custom-confirm'
+                                //     }
+                                // }).then(() => {
+                                //     if (currentQuestionIndex < totalQuestions - 1) {
+                                //         var prevQuest = currentQuestionIndex
+                                //         currentQuestionIndex++;
+                                //         showQuestionRoadMap(currentQuestionIndex, prevQuest, currentResult.is_correct);
+                                //     }
+                                //     $('#clickBlocker').hide();
+                                // });
                             } else {
+                                if (currentQuestionIndex < totalQuestions - 1) {
+                                    var prevQuest = currentQuestionIndex
+                                    currentQuestionIndex++;
+                                    showQuestionRoadMap(currentQuestionIndex, prevQuest, currentResult.is_correct);
+                                }
+                                $('#clickBlocker').hide();
                                 // Incorrect answer popup
-                                Swal.fire({
-                                    title: '😞 Oops, you gave a wrong answer!',
-                                    text: 'Don\'t worry, learning is a process. Try again next time!',
-                                    icon: 'error',
-                                    confirmButtonText: 'Continue',
-                                    confirmButtonColor: '#dc3545',
-                                    background: 'linear-gradient(135deg, #f8d7da, #f5c6cb)',
-                                    color: '#721c24',
-                                    showClass: {
-                                        popup: 'animate__animated animate__shakeX'
-                                    },
-                                    hideClass: {
-                                        popup: 'animate__animated animate__fadeOut'
-                                    },
-                                    customClass: {
-                                        popup: 'swal2-custom-popup',
-                                        title: 'swal2-custom-title',
-                                        confirmButton: 'swal2-custom-confirm'
-                                    }
-                                }).then(() => {
-                                    if (currentQuestionIndex < totalQuestions - 1) {
-                                        var prevQuest = currentQuestionIndex
-                                        currentQuestionIndex++;
-                                        showQuestionRoadMap(currentQuestionIndex, prevQuest, currentResult.is_correct);
-                                    }
-                                    $('#clickBlocker').hide();
-                                });
+                                // Swal.fire({
+                                //     title: '😞 Oops, you gave a wrong answer!',
+                                //     text: 'Don\'t worry, learning is a process. Try again next time!',
+                                //     icon: 'error',
+                                //     confirmButtonText: 'Continue',
+                                //     confirmButtonColor: '#dc3545',
+                                //     background: 'linear-gradient(135deg, #f8d7da, #f5c6cb)',
+                                //     color: '#721c24',
+                                //     showClass: {
+                                //         popup: 'animate__animated animate__shakeX'
+                                //     },
+                                //     hideClass: {
+                                //         popup: 'animate__animated animate__fadeOut'
+                                //     },
+                                //     customClass: {
+                                //         popup: 'swal2-custom-popup',
+                                //         title: 'swal2-custom-title',
+                                //         confirmButton: 'swal2-custom-confirm'
+                                //     }
+                                // }).then(() => {
+                                //     if (currentQuestionIndex < totalQuestions - 1) {
+                                //         var prevQuest = currentQuestionIndex
+                                //         currentQuestionIndex++;
+                                //         showQuestionRoadMap(currentQuestionIndex, prevQuest, currentResult.is_correct);
+                                //     }
+                                //     $('#clickBlocker').hide();
+                                // });
                             }
                         } else {
                             // Fallback if no result found

@@ -94,11 +94,15 @@ $(document).ready(function () {
     // Voice Question
     var selectedVoice = [], voiseAns = {};
     $('.voice-option').on('click', function () {
+        console.log('I am here');
+        
         activeSection = $(this).closest('.question').data('type');
         const qNum = $(this).closest('.question').data('qnum');
         const word = $(this).data('word');
         const qId = $(this).closest('.question').data('id');
         const optPosition = $(this).data('position').toString();
+
+        // console.log($(`#voiceLine_${qNum}`).text(), '-----------');
 
 
         // if (!selectedAnswers[qNum]) {
@@ -111,6 +115,9 @@ $(document).ready(function () {
             voiseAns[qNum] = { ans: selectedVoice, qId: qId };
             selectedAnswers[activeSection] = voiseAns;
             $(`#voiceLine_${qNum} .voice-word[data-word="${word}"]`).remove();
+            // $(`#voiceLine_${qNum}`).text().split('Click options below to form the sentence.').join('').trim();
+            // console.log($(`#voiceLine_${qNum}`).text(), '-----------');
+
         } else {
             $(this).addClass('selected');
             selectedVoice.push(optPosition);

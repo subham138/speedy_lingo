@@ -646,7 +646,24 @@ footer.site-footer a {
     .roadmap-subscribe-cta {
         flex-shrink: 0;
         align-self: center;
-        margin-top: 15px;
+        margin-top: 0px;
+        max-width: 100%;
+    }
+
+    .roadmap-subscribe-cta div .icofont{
+        font-size: 20px;
+    }
+    .roadmap-subscribe-cta div h5{
+        font-size: 17px;
+        margin-bottom: 4px;
+    }
+    .roadmap-subscribe-cta div p.small{
+        margin-bottom: 5px !important;
+    }
+    
+    .roadmap-subscribe-cta div a{
+        font-size: 10px !important;
+        padding: 5px 15px !important;
     }
 
     .roadmap-main-content {
@@ -897,5 +914,11 @@ footer.site-footer a {
         flex-wrap: nowrap;
         overflow-x: scroll;
         padding-bottom: 20px;
+    }
+    .living-room-hero {
+        padding: 50px 0 75px;
+    }
+    .living-room-hero .container p{
+        display: none;
     }
 }

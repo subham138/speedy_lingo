@@ -5,6 +5,8 @@ const UserQuestAns = require('../../models/UserQuestionAnswer');
 const UserTestSession = require('../../models/UserTestSession');
 const dateFormat = require('dateformat');
 const { shuffleOptions } = require('../../modules/masterModules');
+const StripeProduct = require('../../models/Products');
+const { generateQuestions, generateAllQuestions } = require('../../modules/questionModules');
 
 const questRouter = require('express').Router();
 
@@ -22,6 +24,17 @@ questRouter.get('/question', async (req, res) => {
     data = JSON.parse(data);
     const user = req.user;
 
+    // console.log(user, 'USer data');
+
+    var totalQuestionsAllowed = user.plan_is_active != 'Y' ? 10 : 0;
+
+    if(user && user.plan_is_active != 'N'){
+        const allowedQuestions = await StripeProduct.findOne({ id: user.active_pan_id });
+        if (allowedQuestions) totalQuestionsAllowed = allowedQuestions.allowed_question || 0;
+    }
+
+    if (!totalQuestionsAllowed || totalQuestionsAllowed <= 0) totalQuestionsAllowed = 10;
+
     const filterParams = data.quest_type == 'learning' ? ['select_correct', 'fill_in_blanks', 'match_pairs'] : (data.quest_type == 'listening' ? ['describe_image', 'audio_sentence'] : [])
 
     const CatgName = await Category.findOne({ id: data.catg_id });
@@ -31,99 +44,14 @@ questRouter.get('/question', async (req, res) => {
     data.subcategory_name = SubCatgName.name;
 
 
-    const questionListRaw = await Question.aggregate([
-        {
-            $match: {
-                question_display_in: 'inside',
-                category_id: +data.catg_id,
-                sub_category_id: +data.sub_catg_id,
-                question_level: data.level,
-                active_flag: 'Y',
-                question_type: { $in: filterParams }
-            }
-        },
-        {
-            $lookup: {
-                from: "md_category",
-                localField: "category_id",
-                foreignField: "id",
-                as: "category"
-            }
-        },
-        {
-            $lookup: {
-                from: "md_sub_category",
-                localField: "sub_category_id",
-                foreignField: "id",
-                as: "subcategory"
-            }
-        },
-        {
-            $unwind: {
-                path: "$category",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $unwind: {
-                path: "$subcategory",
-                preserveNullAndEmptyArrays: true
-            }
-        },
-        {
-            $addFields: {
-                category_name: "$category.name",
-                subcategory_name: "$subcategory.name"
-            }
-        },
-        {
-            $project: {
-                category: 0,
-                subcategory: 0,
-                category_id: 0,
-                sub_category_id: 0
-            }
-        },
-        { $sort: { category_id: 1, id: 1 } },
-    ]);
-    var questionList = questionListRaw;
-
-    // console.log(questionList, 'List');
-    
-
-    // fetch user's saved answers for these questions
-    const questionIds = questionList.map(q => q.id);
-    let userAnswers = [], answeredQuestionId = [];
-    if (user) {
-        userAnswers = await UserQuestAns.find({ user_id: user.id, quest_id: { $in: questionIds } });
-    }
-
-    // map user answers to question list items
-    questionList = questionList.map(q => {
-        const savedAns = userAnswers.find(ans => ans.quest_id === q.id);
-        if (savedAns)
-            answeredQuestionId.push(q.id)
-        return {
-            ...q,
-            userAnswer: savedAns ? savedAns.answer : null,
-            isCorrect: savedAns ? savedAns.is_correct : null,
-            isSkipped: savedAns ? (savedAns.answer === null || savedAns.answer === '') : true
-        };
-    });
-    // console.log(questionList);
-    
-
-    data.questionList = questionList;
-
-    // max question id index
-    var lastAnswerdQuestionIndex = answeredQuestionId.length > 0 ? questionList.findIndex(dt => dt.id == Math.max(...answeredQuestionId)) : -1
+    const questionData = totalQuestionsAllowed > 10 ? await generateAllQuestions(user.id, data) : await generateQuestions(user.id, data, totalQuestionsAllowed);
 
     res.render('user/question/questions', { 
         title: 'Question', 
-        data: data,
+        data: questionData.msg,
         shuffle: shuffleOptions,
-        last_ans_quest_index: lastAnswerdQuestionIndex,
-        allowQuestLeng: 10
+        last_ans_quest_index: data.last_ans_quest_index,
+        allowQuestLeng: totalQuestionsAllowed
     });
 })
 

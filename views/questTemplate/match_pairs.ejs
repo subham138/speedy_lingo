@@ -4,11 +4,11 @@
         <div class="question-header mb-4">
             <h4 class="card-title mb-3">
                 <i class="icofont icofont-exchange text-info me-2"></i>
-                Match the left and right options.
+                Match the options.
             </h4>
         </div>
         <div class="matching-container row">
-            <div class="matching-column col-md-6" data-match-position="left">
+            <div class="matching-column col-md-6 col-6" data-match-position="left">
                 <% if(question.left_options.length > 0){
                     question.left_options.forEach(opt => {
                         var filterDt = question.correct_matches.filter(dt => dt.left_id == opt.id)
@@ -19,7 +19,7 @@
                     <% })
                 } %>
             </div>
-            <div class="matching-column col-md-6" data-match-position="right">
+            <div class="matching-column col-md-6 col-6" data-match-position="right">
                 <% if(question.right_options.length > 0){
                     question.right_options.forEach(opt => {
                         var filterDt = question.correct_matches.filter(dt => dt.right_id == opt.id)
