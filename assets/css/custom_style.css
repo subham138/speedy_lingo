@@ -564,6 +564,10 @@ footer.site-footer a {
     box-shadow: none;
 }
 
+.question.question-voice {
+    overflow-y: auto;
+}
+
 /* Responsive Roadmap for Mobile */
 @media (max-width: 768px) {
     .roadmap-container {

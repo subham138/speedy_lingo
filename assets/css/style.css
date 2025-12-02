@@ -71,8 +71,8 @@
 }
 
 .enhanced-overlay {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(112, 48, 160, 0.4));
-    backdrop-filter: blur(1px);
+    background: linear-gradient(359deg, rgb(0 0 0 / 37%), rgba(112, 48, 160, -1.6));
+    backdrop-filter: blur(0px);
     padding: 60px;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
