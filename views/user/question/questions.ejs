@@ -155,6 +155,8 @@
     // Voice Question
     var selectedVoice = [], voiseAns = {};
     $('.voice-option').on('click', function () {
+        console.log('i am here-------------------');
+        
         activeSection = $(this).closest('.question').data('type');
         const qNum = $(this).closest('.question').data('qnum');
         const word = $(this).data('word');
@@ -168,14 +170,19 @@
 
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
-            selectedVoice = selectedVoice.filter(w => w !== optPosition);
+            selectedVoice = selectedVoice.filter(w => w !== word);
+            console.log(selectedVoice, '_________')
             voiseAns[qNum] = { ans: selectedVoice, qId: qId };
+            console.log(voiseAns[qNum], '++++++++++++' );
+            
             selectedAnswers[activeSection] = voiseAns;
             $(`#voiceLine_${qNum} .voice-word[data-word="${word}"]`).remove();
         } else {
             $(this).addClass('selected');
-            selectedVoice.push(optPosition);
+            selectedVoice.push(word);
+            console.log(selectedVoice, '_________wwwwwwwwwwwww')
             voiseAns[qNum] = { ans: selectedVoice, qId: qId };
+            console.log(voiseAns[qNum], '++++++++++++qqqqqqqqqqq');
             selectedAnswers[activeSection] = voiseAns;
             $(`#voiceLine_${qNum}`).append(`<span class="voice-word" data-word="${word}">${$(this).text()}</span>`);
         }
@@ -299,6 +306,8 @@
                 }
             }
         }
+        console.log(selectedAnswers, 'SELECTED ANSWERS');
+        
         setTimeout(() => {
             $.ajax({
                 url: '/user/questions/question_save',

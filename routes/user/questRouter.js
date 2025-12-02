@@ -122,10 +122,10 @@ questRouter.post('/question_save', async (req, res) => {
     if (data && data.answers) {
         if (Object.keys(data.answers).length > 0) {
             for (const qtype in data.answers) {
-                console.log(qtype);
+                // console.log(qtype);
                 for (const qnum in data.answers[qtype]) {
                     const ansData = data.answers[qtype][qnum];
-                    console.log(ansData, 'ansData');
+                    // console.log(ansData, 'ansData');
 
                     let actualQuestDt = await Question.findOne({ id: ansData.qId });
                     let score = false;
@@ -160,6 +160,8 @@ questRouter.post('/question_save', async (req, res) => {
                                 break;
                             case 'audio_sentence':
                                 if (actualQuestDt.correct_answer_sequence.length === ansData.ans.length) {
+                                    // console.log(actualQuestDt.correct_answer_sequence.map(dt => dt.toLowerCase()).join(','), ansData.ans.join(','), actualQuestDt.correct_answer_sequence.map(dt => dt.toLowerCase()), '===========');
+                                    
                                     if (actualQuestDt.correct_answer_sequence.map(dt => dt.toLowerCase()).join(',') === ansData.ans.join(',')) {
                                         score = true;
                                         correctAnswers++;
