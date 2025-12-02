@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const UserQuestionProgressSchema = new mongoose.Schema({
-    user_id: { type: Number, required: true, unique: true },
+    user_id: { type: Number, required: true },
+    catg_id: { type: Number, required: true },
+    sub_catg_id: { type: Number, required: true },
     last_set_at: { type: Date, default: null },
     last_question_ids: [{ type: Number, ref: 'Question' }], // most recent set
     history: [{

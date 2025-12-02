@@ -2,6 +2,16 @@ const Question = require("../models/Question");
 const userProgress = require("../models/userProgress");
 const UserQuestAns = require("../models/UserQuestionAnswer");
 
+function isSameIstDay(d1, d2) {
+    if (!d1 || !d2) return false;
+    const IST_OFFSET_MIN = 5 * 60 + 30; // +5:30 in minutes
+    const s1 = new Date(d1.getTime() + IST_OFFSET_MIN * 60000);
+    const s2 = new Date(d2.getTime() + IST_OFFSET_MIN * 60000);
+    return s1.getUTCFullYear() === s2.getUTCFullYear() &&
+        s1.getUTCMonth() === s2.getUTCMonth() &&
+        s1.getUTCDate() === s2.getUTCDate();
+}
+
 const generateQuestions = (user_id, data, totalQuestionsAllowed) => {
     return new Promise(async (resolve, reject) => {
         try{
@@ -11,10 +21,10 @@ const generateQuestions = (user_id, data, totalQuestionsAllowed) => {
             let progress = null;
             let lastQuestionIds = [];
             if (user_id) {
-                progress = await userProgress.findOne({ user_id: user_id }).lean().exec();
+                progress = await userProgress.findOne({ user_id: user_id, catg_id: +data.catg_id, sub_catg_id: +data.sub_catg_id }).lean().exec();
                 if (progress && progress.last_set_at) {
-                    const diffMs = now - new Date(progress.last_set_at);
-                    if (diffMs < 24 * 60 * 60 * 1000 && Array.isArray(progress.last_question_ids) && progress.last_question_ids.length > 0) {
+                    // const diffMs = now - new Date(progress.last_set_at);
+                    if (isSameIstDay(new Date(progress.last_set_at), now) && Array.isArray(progress.last_question_ids) && progress.last_question_ids.length > 0) {
                         // within 24 hours: return the cached set (but ensure it still matches base filters)
                         lastQuestionIds = progress.last_question_ids.slice(0, totalQuestionsAllowed);
             
@@ -218,10 +228,12 @@ const generateQuestions = (user_id, data, totalQuestionsAllowed) => {
                     user_id: user_id,
                     last_set_at: now,
                     last_question_ids: selectedIds,
+                    catg_id: +data.catg_id,
+                    sub_catg_id: +data.sub_catg_id
                 };
                 // also add to history (optional)
                 await userProgress.findOneAndUpdate(
-                    { user_id: upsert.user_id },
+                    { user_id: upsert.user_id, catg_id: upsert.catg_id, sub_catg_id: upsert.sub_catg_id },
                     { $set: { last_set_at: upsert.last_set_at, last_question_ids: upsert.last_question_ids }, $push: { history: { $each: selectedIds.map(id => ({ question_id: id, shown_at: now })) } } },
                     { upsert: true, new: true }
                 ).exec();
