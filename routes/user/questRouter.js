@@ -160,7 +160,7 @@ questRouter.post('/question_save', async (req, res) => {
                                 break;
                             case 'audio_sentence':
                                 if (actualQuestDt.correct_answer_sequence.length === ansData.ans.length) {
-                                    if (actualQuestDt.correct_answer_sequence.join(',') === ansData.ans.join(',')) {
+                                    if (actualQuestDt.correct_answer_sequence.map(dt => dt.toLowerCase()).join(',') === ansData.ans.join(',')) {
                                         score = true;
                                         correctAnswers++;
                                     }
