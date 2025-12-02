@@ -253,18 +253,18 @@
     $('#nextBtnRoadMap').click(function () {
         let qNum = currentQuestionIndex + 1;
 
-        if (['match_pairs', 'audio_sentence'].includes(activeSection)) {
-            selectMatchArr.length = 0
-            if (currentQuestionIndex < totalQuestions - 1) {
-                currentQuestionIndex++;
-                showQuestion(currentQuestionIndex);
-            }
-            $('#clickBlocker').hide();
-            return;
-        }
+        // if (['match_pairs', 'audio_sentence'].includes(activeSection)) {
+        //     selectMatchArr.length = 0
+        //     if (currentQuestionIndex < totalQuestions - 1) {
+        //         currentQuestionIndex++;
+        //         showQuestion(currentQuestionIndex);
+        //     }
+        //     $('#clickBlocker').hide();
+        //     return;
+        // }
 
         $('#clickBlocker').show();
-        if (ansQuest[qNum]) {
+        if (!['match_pairs', 'audio_sentence'].includes(activeSection) && ansQuest[qNum]) {
             if (activeSection == 'fill-blanks') {
                 $(`#blank${qNum}`).removeClass('wrong-answer').addClass('correct-answer');
                 $(`#blank${qNum}`).parent().next('.wrong-answer').hide()

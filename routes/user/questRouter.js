@@ -6,16 +6,68 @@ const UserTestSession = require('../../models/UserTestSession');
 const dateFormat = require('dateformat');
 const { shuffleOptions } = require('../../modules/masterModules');
 const StripeProduct = require('../../models/Products');
-const { generateQuestions, generateAllQuestions } = require('../../modules/questionModules');
+const { generateQuestions, generateAllQuestions, getTotalQuestionsTypeWise, getTotalAnsQuestionsList } = require('../../modules/questionModules');
+const userProgress = require('../../models/userProgress');
 
 const questRouter = require('express').Router();
 
 questRouter.get('/level', async (req, res) => {
-    const data = req.query;
+    const data = req.query, user = req.user;
     const SubCatgName = await SubCategory.findOne({ id: data.sub_catg_id });
+    var userTotalAnswered = 10;
+    var userProg = {
+        readingBeg: 0,
+        readingInt: 0,
+        readingAdv: 0,
+        listeningBrg: 0,
+        listeningInt: 0,
+        listeningAdv: 0
+    }
+
+    if (user.plan_is_active != 'Y'){
+        const lastQuestSet = await userProgress.find({ user_id: user.id, catg_id: +data.catg_id, sub_catg_id: +data.sub_catg_id });
+        if (lastQuestSet && lastQuestSet.length > 0){
+            var quest_arr = [];
+            lastQuestSet.forEach(ls => {
+                quest_arr = quest_arr.concat(ls.last_question_ids);
+            });
+
+            var totalQuestionsByType = {msg: {
+                readingTotalQuestionBeg: userTotalAnswered,
+                readingTotalQuestionInt: userTotalAnswered,
+                readingTotalQuestionAdv: userTotalAnswered,
+                listeningTotalQuestionBrg: userTotalAnswered,
+                listeningTotalQuestionInt: userTotalAnswered,
+                listeningTotalQuestionAdv: userTotalAnswered
+            }};
+            var totalAnswerd = await getTotalAnsQuestionsList(user.id, false, quest_arr);
+
+            userProg = {
+                readingBeg: Math.floor((totalAnswerd.msg.readingTotalUserAnsBeg / totalQuestionsByType.msg.readingTotalQuestionBeg) * 100) || 0,
+                readingInt: Math.floor((totalAnswerd.msg.readingTotalUserAnsInt / totalQuestionsByType.msg.readingTotalQuestionInt) * 100) || 0,
+                readingAdv: Math.floor((totalAnswerd.msg.readingTotalUserAnsAdv / totalQuestionsByType.msg.readingTotalQuestionAdv) * 100) || 0,
+                listeningBrg: Math.floor((totalAnswerd.msg.listeningTotalUserAnsBrg / totalQuestionsByType.msg.listeningTotalQuestionBrg) * 100) || 0,
+                listeningInt: Math.floor((totalAnswerd.msg.listeningTotalUserAnsInt / totalQuestionsByType.msg.listeningTotalQuestionInt) * 100) || 0,
+                listeningAdv: Math.floor((totalAnswerd.msg.listeningTotalUserAnsAdv / totalQuestionsByType.msg.listeningTotalQuestionAdv) * 100) || 0
+            }
+        }
+    }else{
+        var totalQuestionsByType = await getTotalQuestionsTypeWise(+data.catg_id, +data.sub_catg_id);
+        var totalAnswerd = await getTotalAnsQuestionsList(user.id, true);
+
+        userProg = {
+            readingBeg: Math.floor((totalAnswerd.msg.readingTotalUserAnsBeg / totalQuestionsByType.msg.readingTotalQuestionBeg) * 100) || 0,
+            readingInt: Math.floor((totalAnswerd.msg.readingTotalUserAnsInt / totalQuestionsByType.msg.readingTotalQuestionInt) * 100) || 0,
+            readingAdv: Math.floor((totalAnswerd.msg.readingTotalUserAnsAdv / totalQuestionsByType.msg.readingTotalQuestionAdv) * 100) || 0,
+            listeningBrg: Math.floor((totalAnswerd.msg.listeningTotalUserAnsBrg / totalQuestionsByType.msg.listeningTotalQuestionBrg) * 100) || 0,
+            listeningInt: Math.floor((totalAnswerd.msg.listeningTotalUserAnsInt / totalQuestionsByType.msg.listeningTotalQuestionInt) * 100) || 0,
+            listeningAdv: Math.floor((totalAnswerd.msg.listeningTotalUserAnsAdv / totalQuestionsByType.msg.listeningTotalQuestionAdv) * 100) || 0
+        }
+
+    }    
 
     data.subcategory_name = SubCatgName.name;
-    res.render('user/question/questionLevel', { title: 'Question Level', queryData: data });
+    res.render('user/question/questionLevel', { title: 'Question Level', queryData: data, userProg });
 })
 
 questRouter.get('/question', async (req, res) => {
@@ -28,7 +80,7 @@ questRouter.get('/question', async (req, res) => {
 
     var totalQuestionsAllowed = user.plan_is_active != 'Y' ? 10 : 0;
 
-    if(user && user.plan_is_active != 'N'){
+    if (user && user.plan_is_active != 'N') {
         const allowedQuestions = await StripeProduct.findOne({ id: user.active_pan_id });
         if (allowedQuestions) totalQuestionsAllowed = allowedQuestions.allowed_question || 0;
     }
@@ -46,8 +98,8 @@ questRouter.get('/question', async (req, res) => {
 
     const questionData = totalQuestionsAllowed > 10 ? await generateAllQuestions(user.id, data) : await generateQuestions(user.id, data, totalQuestionsAllowed);
 
-    res.render('user/question/questions', { 
-        title: 'Question', 
+    res.render('user/question/questions', {
+        title: 'Question',
         data: questionData.msg,
         shuffle: shuffleOptions,
         last_ans_quest_index: data.last_ans_quest_index,
@@ -60,7 +112,7 @@ questRouter.post('/question_save', async (req, res) => {
         user = req.user;
 
     // console.log(JSON.stringify(data), 'Request Data');
-    
+
 
     let results = [];
     let totalQuestions = 0;
@@ -74,7 +126,7 @@ questRouter.post('/question_save', async (req, res) => {
                 for (const qnum in data.answers[qtype]) {
                     const ansData = data.answers[qtype][qnum];
                     console.log(ansData, 'ansData');
-                    
+
                     let actualQuestDt = await Question.findOne({ id: ansData.qId });
                     let score = false;
                     totalQuestions++;
@@ -149,6 +201,8 @@ questRouter.post('/question_save', async (req, res) => {
                             results.push({ qnum: parseInt(qnum), is_correct: score });
                             // return res.send({ suc: 1, msg: "Question Saved Successfully", results: results, score: correctAnswers, total: totalQuestions });
                         } catch (err) {
+                            console.log(err);
+
                             return res.send({ suc: 0, msg: err });
                         }
                     }
@@ -158,8 +212,8 @@ questRouter.post('/question_save', async (req, res) => {
 
         res.send({ suc: 1, msg: "Question Saved Successfully", results: results, score: correctAnswers, total: totalQuestions });
         // console.log('Score:', score, 'Total:', total);
-    }else{
-        res.send({suc: 0, msg: "No answer found"})
+    } else {
+        res.send({ suc: 0, msg: "No answer found" })
     }
 })
 

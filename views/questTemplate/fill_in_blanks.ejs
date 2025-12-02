@@ -12,7 +12,8 @@
             <p class="text-danger text-small text-center fw-bold wrong-answer" style="display: none;">You have selected a wrong answer.</p>
         </div>
         <div class="options-grid blanks-options">
-            <% question.options.forEach(opt => { %>
+            <% let shuffledOptions = shuffle([...question.options]);
+            shuffledOptions.forEach(opt => { %>
                 <div class="option-item blank-option" data-word="<%= opt.text %>" data-correct="<%= question.correct_answers.includes(opt.text) ? 'true' : 'false' %>" data-qnum="<%= qnum %>"><%= opt.text %></div>
             <% })%>
         </div>
