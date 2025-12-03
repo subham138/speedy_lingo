@@ -87,12 +87,115 @@ const fs = require('fs');
 }
 */
 
+// Fetch all questions
+questRouter.get('/', async (req, res) => {
+    try {
+        const questions = await Question.aggregate([
+            {
+                $lookup: {
+                    from: "md_category",
+                    localField: "category_id",
+                    foreignField: "id",
+                    as: "category"
+                }
+            },
+            { $unwind: "$category" },
+            {
+                $lookup: {
+                    from: "md_sub_category",
+                    localField: "sub_category_id",
+                    foreignField: "id",     // same field naming
+                    as: "subcategory"
+                }
+            },
+            { $unwind: "$subcategory" },
+            {
+                $project: {
+                    _id: 1,
+                    id: 1,
+                    question_text: {
+                        $cond: [
+                            {
+                                $or: [
+                                    { $eq: ["$question_text", null] },
+                                    { $eq: ["$question_text", ""] },
+                                    { $not: ["$question_text"] }
+                                ]
+                            },
+                            "N/A",
+                            "$question_text"
+                        ]
+                    },
+                    question_type: 1,
+                    question_level: 1,
+                    category_id: 1,
+                    sub_category_id: 1,
+                    question_type: 1,
+                    active_flag: 1,
+                    catg_name: "$category.name",
+                    sub_catg_name: "$subcategory.name"
+                }
+            }
+        ]);
+        res.render('admin/question/view', {
+            title: 'Questions List',
+            questions
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching questions', error: error.message });
+    }
+});
+
+// API endpoint for DataTable
+questRouter.get('/api', async (req, res) => {
+    try {
+        const questions = await Question.aggregate([
+            {
+                $lookup: {
+                    from: "md_category",
+                    localField: "category_id",
+                    foreignField: "id",
+                    as: "category"
+                }
+            },
+            { $unwind: "$category" },
+            {
+                $lookup: {
+                    from: "md_sub_category",
+                    localField: "sub_category_id",
+                    foreignField: "id",     // same field naming
+                    as: "subcategory"
+                }
+            },
+            { $unwind: "$subcategory" },
+            {
+                $project: {
+                    _id: 1,
+                    id: 1,
+                    question_text: 1,
+                    question_type: 1,
+                    question_level: 1,
+                    category_id: 1,
+                    sub_category_id: 1,
+                    question_type: 1,
+                    active_flag: 1,
+                    catg_name: "$category.name",
+                    sub_catg_name: "$subcategory.name"
+                }
+            }
+        ]);
+        res.status(200).json({ data: questions });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching questions', error: error.message });
+    }
+});
+
 // Render add question form
 questRouter.get('/add', async (req, res) => {
     try {
         const categories = await Category.find();
         const subCategories = await SubCategory.find();
-        res.render('admin/addQuestion', {
+        res.render('admin/question/entry', {
             title: 'Add Question',
             categories,
             subCategories
@@ -187,26 +290,23 @@ questRouter.post('/add', async (req, res) => {
     }
 });
 
-// Fetch all questions
-questRouter.get('/', async (req, res) => {
+// Render edit question form
+questRouter.get('/edit/:id', async (req, res) => {
     try {
-        const questions = await Question.find().populate({ path: 'category_id', model: 'Category', select: 'name' }).populate({ path: 'sub_category_id', model: 'SubCategory', select: 'name' });
-        res.render('admin/questionsList', {
-            title: 'Questions List',
-            questions
+        const question = await Question.findById(req.params.id);
+        if (!question) {
+            return res.status(404).send('Question not found');
+        }
+        const categories = await Category.find();
+        const subCategories = await SubCategory.find();
+        res.render('admin/question/edit', {
+            title: 'Edit Question',
+            question,
+            categories,
+            subCategories
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching questions', error: error.message });
-    }
-});
-
-// API endpoint for DataTable
-questRouter.get('/api', async (req, res) => {
-    try {
-        const questions = await Question.find().populate({ path: 'category_id', model: 'Category', select: 'name' }).populate({ path: 'sub_category_id', model: 'SubCategory', select: 'name' });
-        res.status(200).json(questions);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching questions', error: error.message });
+        res.status(500).json({ message: 'Error loading edit form', error: error.message });
     }
 });
 
@@ -220,26 +320,6 @@ questRouter.get('/:id', async (req, res) => {
         res.status(200).json(question);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching question', error: error.message });
-    }
-});
-
-// Render edit question form
-questRouter.get('/edit/:id', async (req, res) => {
-    try {
-        const question = await Question.findById(req.params.id);
-        if (!question) {
-            return res.status(404).send('Question not found');
-        }
-        const categories = await Category.find();
-        const subCategories = await SubCategory.find();
-        res.render('admin/editQuestion', {
-            title: 'Edit Question',
-            question,
-            categories,
-            subCategories
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error loading edit form', error: error.message });
     }
 });
 

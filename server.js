@@ -61,8 +61,9 @@ app.use((req, res, next) => {
 const connectDB = require('./db/db');
 const { authenticateToken, setUserMiddleware, authCheckForLogin } = require('./middleware/authMiddleware');
 app.use('/', authCheckForLogin, setUserMiddleware, require('./routes/website/websiteRouterIndex').WebsiteRouterIndex);
-app.use('/admin', require('./routes/admin/adminRouterIndex').adminRouter);
+app.use('/admin', authenticateToken, setUserMiddleware, require('./routes/admin/adminRouterIndex').adminRouter);
 app.use('/user', authenticateToken, setUserMiddleware, require('./routes/user/userRouterIndex').userRouterIndex);
+
 const startServer = async () => {
     try {
         await connectDB();

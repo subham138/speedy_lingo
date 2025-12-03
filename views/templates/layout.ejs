@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('header') %>
+    <% var header = user ? (user.user_type != 'A' ? 'header' : 'admin-header') : 'header',
+    topBar = user ? (user.user_type != 'A' ? 'topbar' : 'admin-topbar') : 'topbar';
+    console.log(header, topBar)  %>
+<%- include(header) %>
 <body>
-    <%- include('topbar') %>
+    <%- include(topBar) %>
     <%- body %>
     <%- include('footer') %>
     <% if (typeof script !== 'undefined') {

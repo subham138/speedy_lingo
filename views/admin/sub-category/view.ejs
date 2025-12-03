@@ -1,0 +1,150 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Subcategories Management</h4>
+                    <a href="/admin/subcategory/add" class="btn btn-light btn-sm">Add New Subcategory</a>
+                </div>
+                <div class="card-body">
+                    <table id="subCategoriesTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Icon</th>
+                                <th>Info</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        function formatDate(value) {
+            if (!value) return 'N/A';
+            const d = new Date(value);
+            if (isNaN(d.getTime())) return String(value);
+            return d.toLocaleString();
+        }
+
+        function renderIcon(data, row) {
+            if (!data) return 'N/A';
+            // If is_icon is true, render as icon class
+            if (row.is_icon) {
+                return `<i class="${data}" title="${data}"></i> ${data}`;
+            }
+            // Otherwise render as image
+            return `<img src="${data}" alt="icon" style="max-width: 50px; max-height: 50px;" />`;
+        }
+
+        $('#subCategoriesTable').DataTable({
+            ajax: {
+                url: '/admin/subcategory/api',
+                type: 'GET',
+                dataSrc: function (json) {
+                    // Normalize response: accept both [...]  and { data: [...] }
+                    var arr = [];
+                    if (!json) return arr;
+                    if (Array.isArray(json)) arr = json;
+                    else if (Array.isArray(json.data)) arr = json.data;
+                    else return arr;
+
+                    // Filter out null/undefined rows and ensure required props exist
+                    return arr.filter(function (item) {
+                        return item && (item.name || item.id || item._id);
+                    }).map(function (item) {
+                        return {
+                            _id: item._id || item.id || null,
+                            id: item.id || (item._id ? String(item._id) : 'N/A'),
+                            name: item.name || 'N/A',
+                            category_id: item.category_id || 'N/A',
+                            icon: item.icon || 'N/A',
+                            is_icon: item.is_icon || false,
+                            info: item.info || 'N/A',
+                            created_dt: item.created_dt || item.createdAt || item.created || 'N/A'
+                        };
+                    });
+                }
+            },
+            columns: [
+                {
+                    data: 'id',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'name',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'category_id',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return renderIcon(row.icon, row);
+                    }
+                },
+                {
+                    data: 'info',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'created_dt',
+                    render: function (data) { return formatDate(data); }
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        var id = row._id || row.id || '';
+                        return `
+                        <a href="/admin/subcategory/edit/${id}" class="btn btn-sm btn-warning">Edit</a>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${id}">Delete</button>
+                    `;
+                    }
+                }
+            ]
+        });
+
+        // Delete functionality
+        $('#subCategoriesTable').on('click', '.delete-btn', function () {
+            const id = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/subcategory/${id}`,
+                        type: 'DELETE',
+                        success: function () {
+                            Swal.fire('Deleted!', 'Subcategory has been deleted.', 'success');
+                            $('#subCategoriesTable').DataTable().ajax.reload();
+                        },
+                        error: function (xhr) {
+                            var msg = (xhr && xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Error';
+                            Swal.fire('Error', msg, 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>

@@ -7,12 +7,20 @@ const dateFormat = require('dateformat');
 categoryRouter.get('/', async (req, res) => {
     try {
         const categories = await Category.find();
-        res.render('admin/categoriesList', {
+        // console.log(categories);
+        
+        res.render('admin/category/view', {
             title: 'Categories List',
             categories
         });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching categories', error: error.message });
+        console.log({ message: 'Error fetching categories', error: error.message });
+        
+        res.render('admin/category/view', {
+            title: 'Categories List',
+            categories: []
+        });
+        // res.status(500).json({ message: 'Error fetching categories', error: error.message });
     }
 });
 
@@ -33,7 +41,7 @@ categoryRouter.get('/edit/:id', async (req, res) => {
         if (!category) {
             return res.status(404).send('Category not found');
         }
-        res.render('admin/editCategory', {
+        res.render('admin/category/edit', {
             title: 'Edit Category',
             category
         });
@@ -45,7 +53,7 @@ categoryRouter.get('/edit/:id', async (req, res) => {
 // Render add category form
 categoryRouter.get('/add', async (req, res) => {
     try {
-        res.render('admin/addCategory', {
+        res.render('admin/category/entry', {
             title: 'Add Category'
         });
     } catch (error) {

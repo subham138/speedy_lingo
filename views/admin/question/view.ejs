@@ -1,0 +1,113 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Questions Management</h4>
+                    <a href="/admin/question/add" class="btn btn-light btn-sm">Add New Question</a>
+                </div>
+                <div class="card-body">
+                    <table id="questionsTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Question Text</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Subcategory</th>
+                                <th>Level</th>
+                                <th>Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#questionsTable').DataTable({
+            ajax: {
+                url: '/admin/question/api',
+                type: 'GET',
+                dataSrc: function (json) {
+                    // Filter out any undefined or null items
+                    return json.data.filter(function (item) {
+                        return item && item.question_text; // Only include items with question_text
+                    });
+                }
+            },
+            columns: [
+                {
+                    data: '_id',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'question_text',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'question_type',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'catg_name',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'sub_catg_name',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'question_level',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'active_flag',
+                    render: function (data) { return data ? 'Yes' : 'No'; }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                    <a href="/admin/question/edit/${row._id}" class="btn btn-sm btn-warning">Edit</a>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="${row._id}">Delete</button>
+                `;
+                    }
+                }
+            ]
+        });
+
+        // Delete functionality
+        $('#questionsTable').on('click', '.delete-btn', function () {
+            const id = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/question/${id}`,
+                        type: 'DELETE',
+                        success: function () {
+                            Swal.fire('Deleted!', 'Question has been deleted.', 'success');
+                            $('#questionsTable').DataTable().ajax.reload();
+                        },
+                        error: function (xhr) {
+                            Swal.fire('Error', xhr.responseJSON.message, 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,387 @@
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">User Records Management</h4>
+                    <span class="badge badge-light" id="totalUsers">Total Users: 0</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="userRecordsTable" class="table table-striped table-bordered table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Join Date</th>
+                                    <th>Last Activity</th>
+                                    <th>Total Activities</th>
+                                    <th>Account Status</th>
+                                    <th>Subscribed</th>
+                                    <th>Current Plan</th>
+                                    <th>Plan Expiry</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Details Modal -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetailsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="userDetailsContent">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Define helper functions first
+        // Accept a DataTables API instance to avoid referencing the `table` const
+        // while it's still being initialized (TDZ problem with `const table = ...`).
+        function updateTotalUsers(api) {
+            const totalUsers = api.page.info().recordsTotal;
+            $('#totalUsers').text(`Total Users: ${totalUsers}`);
+        }
+
+        function loadUserDetails(userId) {
+            $('#userDetailsContent').html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+            $('#userDetailsModal').modal('show');
+
+            $.ajax({
+                url: `/admin/userRecords/api/${userId}`,
+                type: 'GET',
+                success: function (user) {
+                    let content = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="font-weight-bold text-primary">Personal Information</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>User ID:</strong></td>
+                                        <td>#${user.id}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Name:</strong></td>
+                                        <td>${user.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email:</strong></td>
+                                        <td>${user.email}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Phone:</strong></td>
+                                        <td>${user.phone || 'N/A'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Country ID:</strong></td>
+                                        <td>${user.country_id}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Join Date:</strong></td>
+                                        <td>${user.joinDate}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="font-weight-bold text-primary">Account Status</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Status:</strong></td>
+                                        <td><span class="badge badge-${user.accountStatus === 'Active' ? 'success' : 'danger'}">${user.accountStatus}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Last Activity:</strong></td>
+                                        <td>${user.lastActivity}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Activities:</strong></td>
+                                        <td><span class="badge badge-info">${user.totalActivities}</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <h6 class="font-weight-bold text-primary">Subscription Information</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Subscription Status:</strong></td>
+                                        <td><span class="badge badge-${user.isSubscribed === 'Yes' ? 'success' : 'warning'}">${user.isSubscribed}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Plan Status:</strong></td>
+                                        <td><span class="badge badge-${user.planStatus === 'Active' ? 'success' : 'secondary'}">${user.planStatus}</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+
+                    if (user.currentPlan) {
+                        content += `
+                            <div class="alert alert-info">
+                                <h6 class="font-weight-bold">Current Plan Details</h6>
+                                <table class="table table-sm mb-0">
+                                    <tr>
+                                        <td><strong>Plan Name:</strong></td>
+                                        <td>${user.currentPlan.product_name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Duration:</strong></td>
+                                        <td>${user.currentPlan.month_yearly}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Amount:</strong></td>
+                                        <td>${user.currentPlan.currency} ${user.currentPlan.amount}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Purchase Date:</strong></td>
+                                        <td>${new Date(user.currentPlan.purchase_date).toLocaleDateString()}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Expiry Date:</strong></td>
+                                        <td><strong>${new Date(user.currentPlan.expires_date).toLocaleDateString()}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Status:</strong></td>
+                                        <td><span class="badge badge-${(user.currentPlan.status || '') === 'active' ? 'success' : 'danger'}">${(user.currentPlan.status || '').toUpperCase()}</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        `;
+                    } else {
+                        content += `
+                            <div class="alert alert-warning">
+                                <strong>No active subscription</strong> - This user does not have any subscription yet.
+                            </div>
+                        `;
+                    }
+
+                    if (Array.isArray(user.allSubscriptions) && user.allSubscriptions.length > 0) {
+                        content += `
+                            <hr>
+                            <h6 class="font-weight-bold text-primary">Subscription History</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Plan</th>
+                                            <th>Duration</th>
+                                            <th>Amount</th>
+                                            <th>Purchase Date</th>
+                                            <th>Expiry Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                        `;
+
+                        user.allSubscriptions.forEach(sub => {
+                            content += `
+                                <tr>
+                                    <td>${sub.product_name}</td>
+                                    <td>${sub.month_yearly}</td>
+                                    <td>${sub.currency} ${sub.amount}</td>
+                                    <td>${new Date(sub.purchase_date).toLocaleDateString()}</td>
+                                    <td>${new Date(sub.expires_date).toLocaleDateString()}</td>
+                                    <td><span class="badge badge-${(sub.status || '') === 'active' ? 'success' : 'secondary'}">${(sub.status || '').toUpperCase()}</span></td>
+                                </tr>
+                            `;
+                        });
+
+                        content += `
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                    }
+
+                    $('#userDetailsContent').html(content);
+                },
+                error: function (xhr, error, thrown) {
+                    console.error('Error loading user details:', error);
+                    $('#userDetailsContent').html('<div class="alert alert-danger">Failed to load user details</div>');
+                }
+            });
+        }
+
+        // Initialize DataTable
+        const table = $('#userRecordsTable').DataTable({
+            ajax: {
+                url: '/admin/userRecords/api/all',
+                type: 'GET',
+                // Ensure DataTables receives an array even if server payload shape changes
+                dataSrc: function (json) {
+                    if (Array.isArray(json)) return json;
+                    if (json && Array.isArray(json.data)) return json.data;
+                    console.warn('Unexpected users payload for DataTable, returning empty array', json);
+                    return [];
+                },
+                error: function (xhr, error, thrown) {
+                    console.error('Error fetching user records:', error, xhr && xhr.responseText);
+                    Swal.fire('Error', 'Failed to fetch user records', 'error');
+                }
+            },
+            columns: [
+                {
+                    data: 'id',
+                    render: function (data) {
+                        return `<strong>#${data}</strong>`;
+                    }
+                },
+                { data: 'name' },
+                { data: 'email' },
+                {
+                    data: 'phone',
+                    render: function (data) {
+                        return data || 'N/A';
+                    }
+                },
+                { data: 'joinDate' },
+                { data: 'lastActivity' },
+                {
+                    data: 'totalActivities',
+                    render: function (data) {
+                        return `<span class="badge badge-info">${data}</span>`;
+                    }
+                },
+                {
+                    data: 'accountStatus',
+                    render: function (data) {
+                        const badgeClass = data === 'Active' ? 'badge-success' : 'badge-danger';
+                        return `<span class="badge ${badgeClass}">${data}</span>`;
+                    }
+                },
+                {
+                    data: 'isSubscribed',
+                    render: function (data) {
+                        const badgeClass = data === 'Yes' ? 'badge-success' : 'badge-warning';
+                        return `<span class="badge ${badgeClass}">${data}</span>`;
+                    }
+                },
+                {
+                    data: 'subscriptionPlan',
+                    render: function (data) {
+                        return `<small>${data}</small>`;
+                    }
+                },
+                {
+                    data: 'expiryDate',
+                    render: function (data) {
+                        return `<small>${data}</small>`;
+                    }
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `
+                            <button class="btn btn-sm btn-info view-details-btn" data-user-id="${row.id}" title="View Details">
+                                <i class="icofont icofont-eye"></i> View
+                            </button>
+                        `;
+                    }
+                }
+            ],
+            order: [[0, 'asc']],
+            pageLength: 10,
+            responsive: true,
+            drawCallback: function (settings) {
+                // Use the DataTables API for this table instance instead of
+                // referring to the outer `table` const (which isn't initialized
+                // until DataTable() returns).
+                updateTotalUsers(this.api());
+            }
+        });
+
+        // View user details event handler
+        $(document).on('click', '.view-details-btn', function () {
+            const userId = $(this).data('user-id');
+            loadUserDetails(userId);
+        });
+    });
+</script>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    /* Ensure badges have consistent padding and readable text */
+    .badge {
+        padding: 0.35em 0.6em;
+        font-size: 0.85em;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* Force common badge background/text colors so they're visible against table backgrounds */
+    .badge-success {
+        background-color: #28a745 !important;
+        color: #fff !important;
+    }
+
+    .badge-danger {
+        background-color: #dc3545 !important;
+        color: #fff !important;
+    }
+
+    .badge-warning {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+    }
+
+    .badge-info {
+        background-color: #17a2b8 !important;
+        color: #fff !important;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d !important;
+        color: #fff !important;
+    }
+
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .modal-body table tr td:first-child {
+        font-weight: 500;
+        width: 40%;
+    }
+
+    .alert {
+        border-radius: 0.5rem;
+    }
+</style>

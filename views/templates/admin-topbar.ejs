@@ -1,0 +1,295 @@
+<!-- Admin Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient fixed-top shadow-lg"
+    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container-fluid">
+        <!-- Brand/Logo -->
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="/admin/dashboard">
+            <img src="/images/speedy_lingo.png" alt="Speedy Lingo" style="height:44px;" class="me-2">
+        </a>
+
+        <!-- Navbar Toggler for Mobile -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav"
+            aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Main Navigation Menu -->
+        <div class="collapse navbar-collapse" id="adminNav">
+            <ul class="navbar-nav ms-auto me-auto">
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link text-white px-3 d-flex align-items-center" href="/admin/dashboard">
+                        <i class="icofont icofont-dashboard me-2"></i> Dashboard
+                    </a>
+                </li>
+
+                <!-- Master Menu (Category & Sub-Category) -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white px-3 d-flex align-items-center" href="#"
+                        id="masterMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="icofont icofont-settings-alt me-2"></i> Master Menu
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow-lg" aria-labelledby="masterMenuDropdown">
+                        <li><a class="dropdown-item d-flex align-items-center" href="/admin/category">
+                                <i class="icofont icofont-folder me-2" style="color: #667eea;"></i> Category
+                            </a></li>
+                        <li><a class="dropdown-item d-flex align-items-center" href="/admin/subcategory">
+                                <i class="icofont icofont-folder-open me-2" style="color: #764ba2;"></i> Sub-Category
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center text-muted" href="#">
+                                <i class="icofont icofont-info-circle me-2"></i> <small>Manage course structure</small>
+                            </a></li>
+                    </ul>
+                </li>
+
+                <!-- Question Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white px-3 d-flex align-items-center" href="#"
+                        id="questionMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="icofont icofont-question-circle me-2"></i> Questions
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow-lg" aria-labelledby="questionMenuDropdown">
+                        <li><a class="dropdown-item d-flex align-items-center" href="/admin/question">
+                                <i class="icofont icofont-tasks me-2" style="color: #667eea;"></i> Manage Questions
+                            </a></li>
+                        <li><a class="dropdown-item d-flex align-items-center" href="/admin/question/add">
+                                <i class="icofont icofont-plus-circle me-2" style="color: #764ba2;"></i> Add New
+                                Question
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center text-muted" href="#">
+                                <i class="icofont icofont-info-circle me-2"></i> <small>Create and manage
+                                    questions</small>
+                            </a></li>
+                    </ul>
+                </li>
+
+                <!-- User Management Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white px-3 d-flex align-items-center" href="#"
+                        id="userMenuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="icofont icofont-users me-2"></i> Users
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow-lg" aria-labelledby="userMenuDropdown">
+                        <!-- <li><a class="dropdown-item d-flex align-items-center" href="/admin/users">
+                                <i class="icofont icofont-people me-2" style="color: #667eea;"></i> Manage Users
+                            </a></li> -->
+                        <li><a class="dropdown-item d-flex align-items-center" href="/admin/userRecords">
+                                <i class="icofont icofont-chart-line me-2" style="color: #764ba2;"></i> User Records
+                            </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item d-flex align-items-center text-muted" href="#">
+                                <i class="icofont icofont-info-circle me-2"></i> <small>View and manage user
+                                    data</small>
+                            </a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Right Side: Admin Profile & Logout -->
+        <div class="d-flex align-items-center">
+            <!-- Admin Profile Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-light d-flex align-items-center" id="adminAvatarDropdown"
+                    data-bs-toggle="dropdown" aria-expanded="false" style="border:0;">
+                    <div class="admin-avatar me-2" title="Admin Account"
+                        style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">
+                        A
+                    </div>
+                    <span class="admin-username fw-semibold d-none d-md-inline-block">Admin</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="adminAvatarDropdown"
+                    style="min-width: 250px;">
+                    <li>
+                        <div class="px-3 py-3 text-center">
+                            <h6 class="mb-1">Admin User</h6>
+                        </div>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="/admin/profile">
+                            <i class="icofont icofont-user me-2"></i> Profile
+                        </a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="/admin/settings">
+                            <i class="icofont icofont-settings me-2"></i> Settings
+                        </a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a href="/logout" class="dropdown-item text-danger d-flex align-items-center">
+                            <i class="icofont icofont-logout me-2"></i> Log Out
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Custom Styling for Admin Topbar -->
+<style>
+    /* Admin Navbar Customization */
+    .navbar-dark.bg-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .navbar-dark .navbar-nav .nav-link.active {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Dropdown Menu Styling */
+    .dropdown-menu-dark {
+        background-color: #2c3e50 !important;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .dropdown-menu-dark .dropdown-item {
+        color: #ecf0f1 !important;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-menu-dark .dropdown-item:hover {
+        background-color: rgba(102, 126, 234, 0.2) !important;
+        color: #fff !important;
+        padding-left: 1.5rem;
+    }
+
+    .dropdown-menu-dark .dropdown-item.active,
+    .dropdown-menu-dark .dropdown-item:active {
+        background-color: rgba(102, 126, 234, 0.4) !important;
+        color: #fff !important;
+    }
+
+    /* Default dropdown (light) and dark dropdown contrast rules
+       Ensure dropdown items are readable regardless of which dropdown style is used. */
+    .dropdown-menu {
+        background-color: #ffffff !important;
+        color: #111827 !important;
+    }
+
+    .dropdown-menu .dropdown-item {
+        color: #111827 !important;
+    }
+
+    .dropdown-menu.dropdown-menu-dark {
+        background-color: #2c3e50 !important;
+        color: #ecf0f1 !important;
+    }
+
+    /* Admin Avatar */
+    .admin-avatar {
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+
+        0%,
+        100% {
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+        }
+
+        50% {
+            box-shadow: 0 0 15px rgba(118, 75, 162, 0.6);
+        }
+    }
+
+    /* Navbar Brand */
+    .navbar-brand {
+        font-size: 1.3rem;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    /* Admin username pill next to avatar - ensures visibility on any background */
+    .admin-username {
+        background: rgba(255, 255, 255, 0.92);
+        color: #111827 !important;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        margin-left: 6px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar-brand:hover {
+        transform: scale(1.02);
+    }
+
+    /* Shadow Effect */
+    .navbar {
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Icon Colors in Dropdown */
+    .dropdown-item i {
+        font-size: 16px;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .navbar-collapse {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+            padding: 15px;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            padding: 0.5rem 0 !important;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-menu-dark {
+            background-color: #34495e !important;
+        }
+    }
+
+    /* Dropdown Animation */
+    .dropdown-menu {
+        animation: slideDown 0.2s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Navbar Toggler */
+    .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
+    }
+</style>

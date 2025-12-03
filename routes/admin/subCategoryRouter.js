@@ -4,11 +4,83 @@ const SubCategory = require('../../models/SubCategory');
 const Category = require('../../models/Category');
 const dateFormat = require('dateformat');
 
+subCategoryRouter.get('/', async (req, res) => {
+    try {
+        const subCategories = await SubCategory.aggregate([
+            {
+                $lookup: {
+                    from: "md_category",
+                    localField: "category_id",
+                    foreignField: "id",     // same as MySQL field
+                    as: "category"
+                }
+            },
+            { $unwind: "$category" },
+            {
+                $project: {
+                    _id: 1,
+                    id: 1,
+                    name: 1,
+                    category_id: 1,
+                    icon: 1,
+                    info: 1,
+                    created_dt: 1,
+                    // joined field
+                    category_name: "$category.name"
+                }
+            }
+        ])
+        res.render('admin/sub-category/view', {
+            title: 'Subcategories List',
+            subCategories
+        });
+    } catch (error) {
+        console.log({ message: 'Error fetching subcategories', error: error.message });
+        res.render('admin/sub-category/view', {
+            title: 'Subcategories List',
+            subCategories: []
+        });
+    }
+})
+
+subCategoryRouter.get('/api', async (req, res) => {
+    try {
+        const subCategories = await SubCategory.aggregate([
+            {
+                $lookup: {
+                    from: "md_category",
+                    localField: "category_id",
+                    foreignField: "id",     // same as MySQL field
+                    as: "category"
+                }
+            },
+            { $unwind: "$category" },
+            {
+                $project: {
+                    _id: 1,
+                    id: 1,
+                    name: 1,
+                    category_id: 1,
+                    icon: 1,
+                    info: 1,
+                    is_icon: 1,
+                    created_dt: 1,
+                    // joined field
+                    category_name: "$category.name"
+                }
+            }
+        ]);
+        res.status(200).json(subCategories);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching subcategories', error: error.message });
+    }
+});
+
 // Render add subcategory form
 subCategoryRouter.get('/add', async (req, res) => {
     try {
         const categories = await Category.find();
-        res.render('admin/addSubCategory', {
+        res.render('admin/sub-category/entry', {
             title: 'Add Subcategory',
             categories
         });

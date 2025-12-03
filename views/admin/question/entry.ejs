@@ -14,7 +14,7 @@
                                 <select class="form-select" id="category_id" name="category_id" required>
                                     <option value="">Select Category</option>
                                     <% categories.forEach(cat=> { %>
-                                        <option value="<%= cat._id %>">
+                                        <option value="<%= cat.id %>">
                                             <%= cat.name %>
                                         </option>
                                         <% }); %>
@@ -67,8 +67,8 @@
                                 <label for="question_display_in" class="form-label">Display In</label>
                                 <select class="form-select" id="question_display_in" name="question_display_in">
                                     <option value="both">Both</option>
-                                    <option value="inside">Inside</option>
-                                    <option value="outside">Outside</option>
+                                    <option value="inside">Test (After Login)</option>
+                                    <option value="outside">Diagnostics Test (Before Login)</option>
                                 </select>
                             </div>
 
@@ -191,12 +191,20 @@
 
     <script>
         $(document).ready(function () {
+            const subCatgList = `<%- JSON.stringify(subCategories) %>`
             // Filter subcategories based on category
-            $('#category_id').change(function () {
+            $('#category_id').on('change', function () {
                 const categoryId = $(this).val();
-                $('#sub_category_id option').hide();
-                $('#sub_category_id option[data-category="' + categoryId + '"]').show();
-                $('#sub_category_id').val('');
+                $('#sub_category_id').empty().append('<option value="">Select Subcategory</option>');
+                if(categoryId > 0){
+                    var subCatg = JSON.parse(subCatgList);
+                    if(subCatg.length > 0){
+                        subCatg = subCatg.filter(sc => sc.category_id == categoryId);
+                        subCatg.forEach(sc => {
+                            $('#sub_category_id').append('<option value="' + sc.id + '" data-category="' + sc.category_id + '">' + sc.name + '</option>');
+                        });
+                    }
+                }
             });
 
             // Show/hide sections based on question type

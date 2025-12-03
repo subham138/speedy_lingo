@@ -1,0 +1,209 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .dashboard-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.9));
+        border: 1px solid rgba(48, 65, 87, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(112, 48, 160, 0.05), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(48, 65, 87, 0.25);
+    }
+
+    .dashboard-card:hover::before {
+        left: 100%;
+    }
+
+    .dashboard-card .card-body {
+        position: relative;
+        z-index: 2;
+    }
+
+    .dashboard-card .icon {
+        font-size: 3rem;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(48, 65, 87, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover .icon {
+        color: rgba(48, 65, 87, 0.2);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .dashboard-card h4 {
+        color: var(--esg-primary);
+        font-weight: 700;
+    }
+
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="main-content px-5 py-4">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 font-size-18">Dashboard</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Admin</a></li>
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row row-gap-3 justify-content-center">
+                <div class="col-xl-3 col-md-6">
+                    <a href="/admin/userRecords" style="text-decoration: none;">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-users icon"></i>
+                                <p class="text-truncate font-size-14 mb-2">Total Users</p>
+                                <h4 class="mb-2"><%= totalUsers %></h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <a href="/admin/question" style="text-decoration: none;">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-question-circle icon"></i>
+                                <p class="text-truncate font-size-14 mb-2">Total Questions</p>
+                                <h4 class="mb-2"><%= totalQuestions %></h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <a href="/admin/category" style="text-decoration: none;">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-list-alt icon"></i>
+                                <p class="text-truncate font-size-14 mb-2">Total Categories</p>
+                                <h4 class="mb-2"><%= totalCategories %></h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <a href="/admin/subcategory" style="text-decoration: none;">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-sitemap icon"></i>
+                                <p class="text-truncate font-size-14 mb-2">Total Sub-Categories</p>
+                                <h4 class="mb-2"><%= totalSubCategories %></h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <!-- <a href="/admin/transactions" style="text-decoration: none;"> -->
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-dollar-sign icon"></i>
+                                <p class="text-truncate font-size-14 mb-2">Total Received Amount</p>
+                                <h4 class="mb-2">$<%= totalReceivedAmount.toFixed(2) %></h4>
+                            </div>
+                        </div>
+                    <!-- </a> -->
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-xl-6">
+                    <div class="chart-container">
+                        <h4 class="card-title mb-4">New Users (Last 7 Days)</h4>
+                        <canvas id="userChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="chart-container">
+                        <h4 class="card-title mb-4">Transactions (Last 7 Days)</h4>
+                        <canvas id="transactionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const userCtx = document.getElementById('userChart').getContext('2d');
+        new Chart(userCtx, {
+            type: 'bar',
+            data: {
+                labels: <%- JSON.stringify(chartData.days) %>,
+                datasets: [{
+                    label: 'New Users',
+                    data: <%- JSON.stringify(chartData.userCounts) %>,
+                    backgroundColor: 'rgba(140, 107, 245, 0.6)',
+                    borderColor: 'rgba(140, 107, 245, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const transactionCtx = document.getElementById('transactionChart').getContext('2d');
+        new Chart(transactionCtx, {
+            type: 'line',
+            data: {
+                labels: <%- JSON.stringify(chartData.days) %>,
+                datasets: [{
+                    label: 'Transaction Amount',
+                    data: <%- JSON.stringify(chartData.transactionAmounts) %>,
+                    backgroundColor: 'rgba(133, 190, 253, 0.6)',
+                    borderColor: 'rgba(133, 190, 253, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>

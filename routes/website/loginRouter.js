@@ -84,7 +84,9 @@ loginRouter.post('/login', async (req, res) => {
                 console.log(err);
             }
 
-            return res.redirect("/user/dashboard");
+            var redirectTo = chkUser.user_type === 'A' ? '/admin/dashboard' : '/user/dashboard';
+
+            return res.redirect(redirectTo);
         }else{
             req.session.message = { type: 'warning', title: 'Warning', msg: 'Please check your user id or password.' };
             return res.redirect("/login");

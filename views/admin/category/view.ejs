@@ -1,0 +1,125 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Categories Management</h4>
+                    <a href="/admin/category/add" class="btn btn-light btn-sm">Add New Category</a>
+                </div>
+                <div class="card-body">
+                    <table id="categoriesTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Info</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        function formatDate(value) {
+            if (!value) return 'N/A';
+            // try to parse common date formats
+            const d = new Date(value);
+            if (isNaN(d.getTime())) return String(value);
+            return d.toLocaleString();
+        }
+
+        $('#categoriesTable').DataTable({
+            ajax: {
+                url: '/admin/category/api',
+                type: 'GET',
+                dataSrc: function (json) {
+                    // normalize response: accept both { data: [...] } and [...]
+                    var arr = [];
+                    if (!json) return arr;
+                    if (Array.isArray(json)) arr = json;
+                    else if (Array.isArray(json.data)) arr = json.data;
+                    else return arr;
+
+                    // Filter out any null/undefined rows and ensure required props exist
+                    return arr.filter(function (item) {
+                        return item && (item.name || item.id || item._id || item.info || item.created_dt);
+                    }).map(function (item) {
+                        return {
+                            _id: item._id || item.id || null,
+                            id: item.id || (item._1 ? String(item._1) : (item._id ? String(item._id) : 'N/A')),
+                            name: item.name || 'N/A',
+                            info: item.info || 'N/A',
+                            created_dt: item.created_dt || item.createdAt || item.created || 'N/A'
+                        };
+                    });
+                }
+            },
+            columns: [
+                {
+                    data: 'id',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'name',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'info',
+                    render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'created_dt',
+                    render: function (data) { return formatDate(data); }
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        var id = row._id || row.id || '';
+                        return `
+                        <a href="/admin/category/edit/${id}" class="btn btn-sm btn-warning">Edit</a>
+                        <button class="btn btn-sm btn-danger delete-btn" data-id="${id}">Delete</button>
+                    `;
+                    }
+                }
+            ]
+        });
+
+        // Delete functionality
+        $('#categoriesTable').on('click', '.delete-btn', function () {
+            const id = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/category/${id}`,
+                        type: 'DELETE',
+                        success: function () {
+                            Swal.fire('Deleted!', 'Category has been deleted.', 'success');
+                            $('#categoriesTable').DataTable().ajax.reload();
+                        },
+                        error: function (xhr) {
+                            var msg = (xhr && xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Error';
+                            Swal.fire('Error', msg, 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
