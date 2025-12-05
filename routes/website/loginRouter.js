@@ -2,6 +2,7 @@ const loginRouter = require('express').Router();
 const { createToken } = require('../../middleware/authMiddleware');
 const Country = require('../../models/Country');
 const User = require('../../models/User');
+const { welcomeEmail } = require('../../modules/emailModules');
 const { generateCaptcha } = require('../../modules/masterModules');
 const dateFormat = require('dateformat'),
 bcrypt = require("bcrypt");
@@ -37,6 +38,7 @@ loginRouter.post('/signup', async (req, res) => {
     
         const newUser = new User({ stripe_customer_id: '', user_id: data.email, password: pass, name: data.name, email: data.email, phone: null, country_id: data.country, user_type: 'U', active_flag: 'Y', created_by: data.name, created_dt: dateFormat(new Date(), "yyyy-mm-dd hh:MM:ss") });
         await newUser.save();
+        await welcomeEmail(data.email, data.name);
         req.session.message = { type: 'success', title: 'Success', msg: 'User registered successfully' };
         res.redirect("/login");
     }catch(err){
