@@ -89,7 +89,7 @@ const welcomeEmail = async (toEmail, userName, enc_dt = '') => {
                                         <tr>
                                             <td style="padding: 0 30px; text-align: center;">
                                                 <h5 style="font-weight: 600; font-size: 25px; margin: 25px;">Learn on your own time, in less time</h5>
-                                                <p style="margin: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 400; letter-spacing: 0px; color: rgb(119, 119, 119) !important;">Studies show beginner Duolingo learners can learn as much French as university students, in half the time.* And they never had to pull an all-nighter!</p>
+                                                <p style="margin: 0px; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 400; letter-spacing: 0px; color: rgb(119, 119, 119) !important;">Studies show beginner Speedy Lingo learners can learn as much French as university students, in half the time.* And they never had to pull an all-nighter!</p>
                                             </td>
                                         </tr>
                                         <tr>
