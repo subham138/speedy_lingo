@@ -23,7 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
     useTempFiles: true,
-    tempFileDir: '/tmp/'
+    tempFileDir: path.join(__dirname, 'tmp'),
+    tempFilePermissions: '644'
 }));
 
 // SET ASSETS AS A STATIC PATH //
