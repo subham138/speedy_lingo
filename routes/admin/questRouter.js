@@ -324,7 +324,7 @@ questRouter.get('/:id', async (req, res) => {
 });
 
 // Update a question by ID
-questRouter.put('/:id', async (req, res) => {
+questRouter.post('/:id', async (req, res) => {
     try {
         const data = req.body;
 

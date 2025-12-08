@@ -111,7 +111,7 @@ categoryRouter.post('/', async (req, res) => {
   Sample Curl:
   curl -X PUT -H "Content-Type: application/json" -d '''{"name":"Advanced Grammar"}''' http://localhost:3000/admin/categories/1
 */
-categoryRouter.put('/:id', async (req, res) => {
+categoryRouter.post('/:id', async (req, res) => {
     try {
         const { name, info } = req.body;
         const categoryId = req.params.id;
