@@ -37,7 +37,7 @@
 
             $.ajax({
                 url: `/admin/category/${categoryId}`,
-                type: 'PUT',
+                type: 'POST',
                 data: formData,
                 success: function (response) {
                     Swal.fire('Success', 'Category updated successfully!', 'success')

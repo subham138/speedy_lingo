@@ -77,7 +77,7 @@
 
             $.ajax({
                 url: `/admin/subcategory/${subCategoryId}`,
-                type: 'PUT',
+                type: 'POST',
                 data: formData,
                 success: function (response) {
                     Swal.fire('Success', 'Subcategory updated successfully!', 'success')
