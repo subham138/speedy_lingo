@@ -94,8 +94,6 @@ $(document).ready(function () {
     // Voice Question
     var selectedVoice = [], voiseAns = {};
     $('.voice-option').on('click', function () {
-        console.log('I am here');
-        
         activeSection = $(this).closest('.question').data('type');
         const qNum = $(this).closest('.question').data('qnum');
         const word = $(this).data('word');
@@ -112,7 +110,7 @@ $(document).ready(function () {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             selectedVoice = selectedVoice.filter(w => w !== optPosition);
-            voiseAns[qNum] = { ans: selectedVoice, qId: qId };
+            voiseAns[qNum] = { ans: [...selectedVoice], qId: qId };
             selectedAnswers[activeSection] = voiseAns;
             $(`#voiceLine_${qNum} .voice-word[data-word="${word}"]`).remove();
             // $(`#voiceLine_${qNum}`).text().split('Click options below to form the sentence.').join('').trim();
@@ -120,9 +118,11 @@ $(document).ready(function () {
 
         } else {
             $(this).addClass('selected');
-            selectedVoice.push(optPosition);
-            voiseAns[qNum] = { ans: selectedVoice, qId: qId };
+            selectedVoice.push(word);
+            voiseAns[qNum] = { ans: [...selectedVoice], qId: qId };
             selectedAnswers[activeSection] = voiseAns;
+            console.log(selectedAnswers, 'selected answers');
+            
             $(`#voiceLine_${qNum}`).append(`<span class="voice-word" data-word="${word}">${$(this).text()}</span>`);
         }
 
@@ -199,11 +199,12 @@ $(document).ready(function () {
     $('#nextBtn').click(function () {
         // console.log(currentQuestionIndex, '-------------');
         let qNum = currentQuestionIndex + 1;
-
+        
         if (['match_pairs', 'audio_sentence'].includes(activeSection)) {
             selectMatchArr.length = 0
             if (currentQuestionIndex < totalQuestions - 1) {
                 currentQuestionIndex++;
+                selectedVoice.length = 0;
                 showQuestion(currentQuestionIndex);
             }
             $('#clickBlocker').hide();
@@ -233,6 +234,7 @@ $(document).ready(function () {
         // setTimeout(() => {
         if (currentQuestionIndex < totalQuestions - 1) {
             currentQuestionIndex++;
+            selectedVoice.length = 0;
             showQuestion(currentQuestionIndex);
         }
         //     $('#clickBlocker').hide();
@@ -243,6 +245,7 @@ $(document).ready(function () {
     $('#prevBtn').click(function () {
         if (currentQuestionIndex > 0) {
             currentQuestionIndex--;
+            selectedVoice.length = 0;
             showQuestion(currentQuestionIndex);
         }
     });

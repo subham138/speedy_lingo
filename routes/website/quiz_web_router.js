@@ -36,7 +36,7 @@ quizWebRouter.get('/result', async (req, res) => {
 
 quizWebRouter.post('/check-answer', async(req, res) => {
     const data = req.body;
-    // console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data));
 
     if(data && data.answers){
         let score = 0;
@@ -78,7 +78,7 @@ quizWebRouter.post('/check-answer', async(req, res) => {
                                 if (actualQuestDt.correct_answer_sequence.length === ansData.ans.length){
                                     console.log(actualQuestDt.correct_answer_sequence.join(','), '======', ansData.ans.join(','), '+++++++++++');
                                     
-                                    if (actualQuestDt.correct_answer_sequence.join(',') === ansData.ans.join(',')){
+                                    if (actualQuestDt.correct_answer_sequence.map(dt => dt.toLowerCase()).join(',') === ansData.ans.join(',')){
                                         score += 1;
                                     }
                                 }
