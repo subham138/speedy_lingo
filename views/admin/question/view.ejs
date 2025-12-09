@@ -16,6 +16,7 @@
                                 <th>Category</th>
                                 <th>Subcategory</th>
                                 <th>Level</th>
+                                <th>Display In</th>
                                 <th>Active</th>
                                 <th>Actions</th>
                             </tr>
@@ -65,6 +66,17 @@
                 {
                     data: 'question_level',
                     render: function (data) { return data || 'N/A'; }
+                },
+                {
+                    data: 'question_display_in',
+                    render: function (data) {
+                        var renderDt = {
+                            inside: 'Inside Test',
+                            outside: 'Outside Test',
+                            both: 'Both'
+                        }
+                        return data ? renderDt[data] : 'N/A';
+                    }
                 },
                 {
                     data: 'active_flag',

@@ -162,7 +162,7 @@
                                 <% if (question.word_bank && question.word_bank.length> 0) { %>
                                     <% question.word_bank.forEach((word, index)=> { %>
                                         <div class="word-item mb-2">
-                                            <input type="text" class="form-control" name="word_bank[<%= index %>]"
+                                            <input type="text" class="form-control" name="word_bank"
                                                 value="<%= word %>">
                                             <button type="button" class="btn btn-danger remove-word">Remove</button>
                                         </div>
@@ -298,7 +298,7 @@
             const index = $('#wordBankContainer .word-item').length;
             const wordHtml = `
             <div class="word-item mb-2">
-                <input type="text" class="form-control" name="word_bank[${index}]" placeholder="Word">
+                <input type="text" class="form-control" name="word_bank" placeholder="Word">
                 <button type="button" class="btn btn-danger remove-word">Remove</button>
             </div>
         `;
@@ -348,6 +348,9 @@
             e.preventDefault();
             const formData = new FormData(this);
             const questionId = $('#questionId').val();
+
+            console.log(formData);
+            
 
             $.ajax({
                 url: `/admin/question/${questionId}`,

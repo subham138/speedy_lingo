@@ -90,56 +90,54 @@ const fs = require('fs');
 // Fetch all questions
 questRouter.get('/', async (req, res) => {
     try {
-        const questions = await Question.aggregate([
-            {
-                $lookup: {
-                    from: "md_category",
-                    localField: "category_id",
-                    foreignField: "id",
-                    as: "category"
-                }
-            },
-            { $unwind: "$category" },
-            {
-                $lookup: {
-                    from: "md_sub_category",
-                    localField: "sub_category_id",
-                    foreignField: "id",     // same field naming
-                    as: "subcategory"
-                }
-            },
-            { $unwind: "$subcategory" },
-            {
-                $project: {
-                    _id: 1,
-                    id: 1,
-                    question_text: {
-                        $cond: [
-                            {
-                                $or: [
-                                    { $eq: ["$question_text", null] },
-                                    { $eq: ["$question_text", ""] },
-                                    { $not: ["$question_text"] }
-                                ]
-                            },
-                            "N/A",
-                            "$question_text"
-                        ]
-                    },
-                    question_type: 1,
-                    question_level: 1,
-                    category_id: 1,
-                    sub_category_id: 1,
-                    question_type: 1,
-                    active_flag: 1,
-                    catg_name: "$category.name",
-                    sub_catg_name: "$subcategory.name"
-                }
-            }
-        ]);
+        // const questions = await Question.aggregate([
+        //     {
+        //         $lookup: {
+        //             from: "md_category",
+        //             localField: "category_id",
+        //             foreignField: "id",
+        //             as: "category"
+        //         }
+        //     },
+        //     {
+        //         $lookup: {
+        //             from: "md_sub_category",
+        //             localField: "sub_category_id",
+        //             foreignField: "id",     // same field naming
+        //             as: "subcategory"
+        //         }
+        //     },
+        //     {
+        //         $project: {
+        //             _id: 1,
+        //             id: 1,
+        //             question_display_in: 1,
+        //             question_text: {
+        //                 $cond: [
+        //                     {
+        //                         $or: [
+        //                             { $eq: ["$question_text", null] },
+        //                             { $eq: ["$question_text", ""] },
+        //                             { $not: ["$question_text"] }
+        //                         ]
+        //                     },
+        //                     "N/A",
+        //                     "$question_text"
+        //                 ]
+        //             },
+        //             question_type: 1,
+        //             question_level: 1,
+        //             category_id: 1,
+        //             sub_category_id: 1,
+        //             active_flag: 1,
+        //             catg_name: { $ifNull: [{ $arrayElemAt: ["$category.name", 0] }, "N/A"] },
+        //             sub_catg_name: { $ifNull: [{ $arrayElemAt: ["$subcategory.name", 0] }, "N/A"] }
+        //         }
+        //     }
+        // ]);
         res.render('admin/question/view', {
             title: 'Questions List',
-            questions
+            questions: []
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching questions', error: error.message });
@@ -158,7 +156,6 @@ questRouter.get('/api', async (req, res) => {
                     as: "category"
                 }
             },
-            { $unwind: "$category" },
             {
                 $lookup: {
                     from: "md_sub_category",
@@ -167,20 +164,31 @@ questRouter.get('/api', async (req, res) => {
                     as: "subcategory"
                 }
             },
-            { $unwind: "$subcategory" },
             {
                 $project: {
                     _id: 1,
                     id: 1,
-                    question_text: 1,
+                    question_display_in: 1,
+                    question_text: {
+                        $cond: [
+                            {
+                                $or: [
+                                    { $eq: ["$question_text", null] },
+                                    { $eq: ["$question_text", ""] },
+                                    { $not: ["$question_text"] }
+                                ]
+                            },
+                            "N/A",
+                            "$question_text"
+                        ]
+                    },
                     question_type: 1,
                     question_level: 1,
                     category_id: 1,
                     sub_category_id: 1,
-                    question_type: 1,
                     active_flag: 1,
-                    catg_name: "$category.name",
-                    sub_catg_name: "$subcategory.name"
+                    catg_name: { $ifNull: [{ $arrayElemAt: ["$category.name", 0] }, "N/A"] },
+                    sub_catg_name: { $ifNull: [{ $arrayElemAt: ["$subcategory.name", 0] }, "N/A"] }
                 }
             }
         ]);
